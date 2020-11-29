@@ -1,0 +1,16 @@
+variables:
+#  CANDIDATE_ID: abc123
+
+gcc_tests:
+  tags:
+    - docker_ctest
+  image: dte3607_build_gcc
+  script:
+    - RunDTE3607Tests
+
+clang_tests:
+  tags:
+    - docker_ctest
+  image: dte3607_build_clang
+  script:
+    - RunDTE3607Tests
