@@ -13,7 +13,7 @@
 
 using namespace dte3607::coldet;
 
-TEST(Mechanics_Sphere_vs_FixedPlane_Response, Test001)
+TEST(Mechanics_Sphere_vs_FixedPlane_Response, BasicTest)
 {
 
   // Sphere velocity
@@ -30,6 +30,42 @@ TEST(Mechanics_Sphere_vs_FixedPlane_Response, Test001)
   auto length_res_diff = blaze::evaluate(blaze::length(diff_res));
 
   EXPECT_NEAR(length_res_diff, 0, 1e-5);
+}
 
-//  EXPECT_TRUE(false);
+TEST(Mechanics_Sphere_vs_FixedPlane_Response, HorizontalPlane_AngleTest)
+{
+
+  // Sphere velocity
+  types::Vector3 const sphere_v{5.0, 0.0, -5.0};
+
+  // The plane's normal
+  types::Vector3 const fplane_n{0, 0, 1};
+
+  auto const response
+    = mechanics::computeImpactResponseSphereFixedPlane(sphere_v, fplane_n);
+
+  auto gold_res        = types::Vector3{5.0, 0.0, 5.0};
+  auto diff_res        = gold_res - response;
+  auto length_res_diff = blaze::evaluate(blaze::length(diff_res));
+
+  EXPECT_NEAR(length_res_diff, 0, 1e-5);
+}
+
+TEST(Mechanics_Sphere_vs_FixedPlane_Response, HorizontalPlane_Tilted_Test)
+{
+
+  // Sphere velocity
+  types::Vector3 const sphere_v{5.0, 0.0, -5.0};
+
+  // The plane's normal
+  types::Vector3 const fplane_n{-0.70710678, 0, 0.70710678};
+
+  auto const response
+    = mechanics::computeImpactResponseSphereFixedPlane(sphere_v, fplane_n);
+
+  auto gold_res        = types::Vector3{-5.0, 0.0, 5.0};
+  auto diff_res        = gold_res - response;
+  auto length_res_diff = blaze::evaluate(blaze::length(diff_res));
+
+  EXPECT_NEAR(length_res_diff, 0, 1e-5);
 }
