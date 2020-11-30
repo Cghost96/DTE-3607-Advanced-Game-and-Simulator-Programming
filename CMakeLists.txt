@@ -26,7 +26,7 @@ endif()
 ##############
 # Project name
 ##############
-SET(CANDIDATE_ID "abc123")
+SET(CANDIDATE_ID "cle019")
 project(dte3607_${CANDIDATE_ID} VERSION 0.1 LANGUAGES CXX)
 
 
