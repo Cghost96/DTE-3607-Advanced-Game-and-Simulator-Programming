@@ -3,21 +3,18 @@
 
 #include "types.h"
 
-
 //stl
 #include <concepts>
 
-namespace dte3607::coldet::rigidbodies
-{
+namespace dte3607::coldet::rigidbodies {
 
 
 
 //  template <std::floating_point ValueType_T = double>
-  struct Sphere {
-    Sphere(types::Vector3 const&              velocity,
+struct Sphere {
+    Sphere(types::Vector3 const& velocity,
            types::Vector3::ElementType const& radius, std::string name = {})
-      : m_name{name}, m_velocity{velocity}, m_radius{radius}
-    {
+        : m_name{name}, m_velocity{velocity}, m_radius{radius} {
     }
 
     // Concept requirements
@@ -30,37 +27,51 @@ namespace dte3607::coldet::rigidbodies
     using Timepoint        = types::HighResolutionTP;
 
     // Lin. alg. prop. access
-    SpaceObjectFrame&       spaceObjectFrame() { return m_object; }
-    SpaceObjectFrame const& spaceObjectFrame() const { return m_object; }
+    SpaceObjectFrame&       spaceObjectFrame() {
+        return m_object;
+    }
+    SpaceObjectFrame const& spaceObjectFrame() const {
+        return m_object;
+    }
 
     // Sphere prop. access
-    Point3    point() const { return m_object.frameOriginParent(); }
-    ValueType radius() const { return m_radius; }
+    Point3    point() const {
+        return m_object.frameOriginParent();
+    }
+    ValueType radius() const {
+        return m_radius;
+    }
 
     // Mechanics prop. access
-    Vector3 velocity() const
-    {
-      return vFrame() * m_velocity;
+    Vector3 velocity() const {
+        return vFrame() * m_velocity;
     }
-    Timepoint& timepoint() { return m_timepoint; }
-    ValueType  mass() const { return m_mass; }
-    ValueType  frictionCoef() const { return m_friction_coef; }
+    Timepoint& timepoint() {
+        return m_timepoint;
+    }
+    ValueType  mass() const {
+        return m_mass;
+    }
+    ValueType  frictionCoef() const {
+        return m_friction_coef;
+    }
 
     // Other stuff
     /** a; in the "parent" spacial frame */
     void addAcceleration(types::Vector3 const& a) {
-      m_velocity += blaze::inv(vFrame()) * a;
+        m_velocity += blaze::inv(vFrame()) * a;
     }
 
     /** v; in the "parent" spacial frame */
-    void setVelocity(types::Vector3 const& v)
-    {
-      m_velocity = blaze::inv(vFrame()) * v;
+    void setVelocity(types::Vector3 const& v) {
+        m_velocity = blaze::inv(vFrame()) * v;
     }
 
     // States
     enum class States { Free, Resting, Sliding, Rolling };
-    States& state() { return m_state; }
+    States& state() {
+        return m_state;
+    }
 
 
     // Concept requirements END
@@ -82,17 +93,15 @@ namespace dte3607::coldet::rigidbodies
     States           m_state{States::Free};
 
 
-    typename SpaceObjectFrame::Frame vFrame() const
-    {
-      return m_object.vSpaceFrameParent();
+    typename SpaceObjectFrame::Frame vFrame() const {
+        return m_object.vSpaceFrameParent();
     }
-  };
+};
 
 
-  struct FixedPlane {
+struct FixedPlane {
     FixedPlane(types::Vector3 const& n, std::string name = {})
-      : m_name{name}, m_n{n}
-    {
+        : m_name{name}, m_n{n} {
     }
 
     // Concept requirements
@@ -108,13 +117,21 @@ namespace dte3607::coldet::rigidbodies
     using Timepoint        = types::HighResolutionTP;
 
     // Lin. alg. prop. access
-    SpaceObjectFrame& spaceObjectFrame() { return m_object; }
+    SpaceObjectFrame& spaceObjectFrame() {
+        return m_object;
+    }
 
     // Plane prop. access
-    Point3 point() const { return m_object.frameOriginParent(); }
-    Point3 normal() const { return m_object.vSpaceFrameParent() * m_n; }
+    Point3 point() const {
+        return m_object.frameOriginParent();
+    }
+    Point3 normal() const {
+        return m_object.vSpaceFrameParent() * m_n;
+    }
 
-    ValueType  frictionCoef() const { return m_friction_coef; }
+    ValueType  frictionCoef() const {
+        return m_friction_coef;
+    }
 
     // Concept requirements END
 
@@ -125,7 +142,7 @@ namespace dte3607::coldet::rigidbodies
     SpaceObjectFrame m_object;
     Vector3          m_n{0, 1, 0};
     ValueType        m_friction_coef{0.0};
-  };
+};
 
 }   // namespace dte3607::coldet::rigidbodies
 

@@ -11,10 +11,14 @@ inline std::pair<types::Vector3, types::Vector3> computeLinearTrajectory(
     [[maybe_unused]] types::Vector3 const& external_forces,
     [[maybe_unused]] types::Duration       timestep) {
 
-    double dt = utils::toDt(timestep);
-    auto lin_traj = (velocity + 0.5 * external_forces * dt);
+    auto const v = velocity;
+    auto const F = external_forces;
+    double const dt = utils::toDt(timestep);
 
-    return {lin_traj, external_forces * dt};
+    auto const a = F * dt; //acceleration
+    auto const ds = (v + (1.0 / 2.0) * a) * dt; //lin_traj
+
+    return {ds, a};
 }
 
 

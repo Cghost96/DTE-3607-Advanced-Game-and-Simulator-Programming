@@ -9,40 +9,41 @@
 #include <chrono>
 #include <cstdint>
 
-namespace dte3607::coldet::types
-{
-  // Point and Vector and Frame
-  using ValueType = double;
-  using Point3    = gm::VectorT<ValueType, 3>;
-  using Point3H   = gm::VectorT<ValueType, 4>;
-  using Vector3   = gm::VectorT<ValueType, 3>;
-  using Vector3H  = gm::VectorT<ValueType, 4>;
-  using Frame3    = gm::SqMatrixT<ValueType, 3>;
-  using Frame3H   = gm::SqMatrixT<ValueType, 4>;
+namespace dte3607::coldet::types {
+// Point and Vector and Frame
+using ValueType = double;
+using Point3    = gm::VectorT<ValueType, 3>;
+using Point3H   = gm::VectorT<ValueType, 4>;
+using Vector3   = gm::VectorT<ValueType, 3>;
+using Vector3H  = gm::VectorT<ValueType, 4>;
+using Frame3    = gm::SqMatrixT<ValueType, 3>;
+using Frame3H   = gm::SqMatrixT<ValueType, 4>;
 
 
-  // Clock
-  using HighResolutionClock = std::chrono::high_resolution_clock;
-  using HighResolutionTP    = std::chrono::time_point<HighResolutionClock>;
+// Clock
+using HighResolutionClock = std::chrono::high_resolution_clock;
+using HighResolutionTP    = std::chrono::time_point<HighResolutionClock>;
 
-  // Integer time types
-  using Seconds      = std::chrono::duration<intmax_t>;
-  using MilliSeconds = std::chrono::duration<intmax_t, std::milli>;
-  using MicroSeconds = std::chrono::duration<intmax_t, std::micro>;
-  using NanoSeconds  = std::chrono::duration<intmax_t, std::nano>;
+// Integer time types
+using Seconds      = std::chrono::duration<intmax_t>;
+using MilliSeconds = std::chrono::duration<intmax_t, std::milli>;
+using MicroSeconds = std::chrono::duration<intmax_t, std::micro>;
+using NanoSeconds  = std::chrono::duration<intmax_t, std::nano>;
 
-  // Floating point time types
-  using SecondsD      = std::chrono::duration<ValueType>;
-  using MilliSecondsD = std::chrono::duration<ValueType, std::milli>;
-  using MicroSecondsD = std::chrono::duration<ValueType, std::micro>;
-  using NanoSecondsD  = std::chrono::duration<ValueType, std::nano>;
+// Floating point time types
+using SecondsD      = std::chrono::duration<ValueType>;
+using MilliSecondsD = std::chrono::duration<ValueType, std::milli>;
+using MicroSecondsD = std::chrono::duration<ValueType, std::micro>;
+using NanoSecondsD  = std::chrono::duration<ValueType, std::nano>;
 
-  using Duration = NanoSeconds;
-  using Dt       = SecondsD;
-  using DtRep    = Dt::rep;
+using Duration = NanoSeconds;
+using Dt       = SecondsD;
+using DtNano = NanoSecondsD;
+using DtRep    = Dt::rep;
 
-  // Spatial objects
-  using ProjectiveSpaceObject
+
+// Spatial objects
+using ProjectiveSpaceObject
     = gm::SpaceObject<gm::spaces::ProjectiveSpace<ValueType, 3>>;
 
 
