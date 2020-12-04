@@ -12,7 +12,7 @@
 
 using namespace dte3607::coldet;
 
-TEST(Mechanics_Sphere_vs_Sphere_Response, BasicTest)
+TEST(Mechanics_Sp_vs_Sp_Response, BasicTest)
 {
   // Sphere
   types::Vector3 const sphere_p{-0.5, 0, 0};
@@ -40,7 +40,7 @@ TEST(Mechanics_Sphere_vs_Sphere_Response, BasicTest)
   EXPECT_NEAR(length_diff_other, 0, 1e-5);
 }
 
-TEST(Mechanics_Sphere_vs_Sphere_Response, DifferentMassTest)
+TEST(Mechanics_Sp_vs_Sp_Response, DifferentMassTest)
 {
   // Sphere
   types::Vector3 const sphere_p{-0.5, 0, 0};
