@@ -82,12 +82,12 @@ namespace dte3607::coldet::concepts::scenario_fixtures
     template <typename ScenarioFixture_T>
     concept SolverDevFixtureStep1 =
         SolverDevFixtureStep0<ScenarioFixture_T> and
-        components::HasFixedPlanes<ScenarioFixture_T>;
+        components::HasFixedPlanes<ScenarioFixture_T> and
+        components::HasTimeAwareSpheres<ScenarioFixture_T>;
 
     template <typename ScenarioFixture_T>
     concept SolverDevFixtureStep2 =
-        SolverDevFixtureStep1<ScenarioFixture_T> and
-        components::HasTimeAwareSpheres<ScenarioFixture_T>;
+        SolverDevFixtureStep1<ScenarioFixture_T>;
 
     template <typename ScenarioFixture_T>
     concept SolverDevFixtureStep3a =

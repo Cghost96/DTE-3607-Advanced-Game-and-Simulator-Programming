@@ -13,7 +13,7 @@
 
 using namespace dte3607::coldet;
 
-TEST(Mechanics_Sphere_vs_FixedPlane_Response, BasicTest)
+TEST(Mechanics_Sp_vs_FPl_Response, BasicTest)
 {
 
   // Sphere velocity
@@ -32,7 +32,7 @@ TEST(Mechanics_Sphere_vs_FixedPlane_Response, BasicTest)
   EXPECT_NEAR(length_res_diff, 0, 1e-5);
 }
 
-TEST(Mechanics_Sphere_vs_FixedPlane_Response, HorizontalPlane_AngleTest)
+TEST(Mechanics_Sp_vs_FPl_Response, HorizontalPlane_AngleTest)
 {
 
   // Sphere velocity
@@ -51,9 +51,8 @@ TEST(Mechanics_Sphere_vs_FixedPlane_Response, HorizontalPlane_AngleTest)
   EXPECT_NEAR(length_res_diff, 0, 1e-5);
 }
 
-TEST(Mechanics_Sphere_vs_FixedPlane_Response, HorizontalPlane_Tilted_Test)
+TEST(Mechanics_Sp_vs_FPl_Response, HorizontalPlane_Tilted_Test)
 {
-
   // Sphere velocity
   types::Vector3 const sphere_v{5.0, 0.0, -5.0};
 

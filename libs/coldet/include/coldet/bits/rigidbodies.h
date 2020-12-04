@@ -16,7 +16,7 @@ namespace dte3607::coldet::rigidbodies
   struct Sphere {
     Sphere(types::Vector3 const&              velocity,
            types::Vector3::ElementType const& radius, std::string name = {})
-      : m_name{name}, m_velocity{velocity}, m_radius{radius}
+      : m_velocity{velocity}, m_radius{radius}, m_name{name}
     {
     }
 
@@ -29,6 +29,10 @@ namespace dte3607::coldet::rigidbodies
     using SpaceObjectFrame = types::ProjectiveSpaceObject;
     using Timepoint        = types::HighResolutionTP;
 
+    // Class type constants
+    static constexpr ValueType frictionCoefMin{0.0};
+    static constexpr ValueType frictionCoefMax{1.0};
+
     // Lin. alg. prop. access
     SpaceObjectFrame&       spaceObjectFrame() { return m_object; }
     SpaceObjectFrame const& spaceObjectFrame() const { return m_object; }
@@ -38,13 +42,16 @@ namespace dte3607::coldet::rigidbodies
     ValueType radius() const { return m_radius; }
 
     // Mechanics prop. access
-    Vector3 velocity() const
-    {
-      return vFrame() * m_velocity;
-    }
-    Timepoint& timepoint() { return m_timepoint; }
     ValueType  mass() const { return m_mass; }
     ValueType  frictionCoef() const { return m_friction_coef; }
+    Vector3    velocity() const { return vFrame() * m_velocity; }
+    Timepoint& timepoint() { return m_timepoint; }
+    void       setMass(ValueType const& mass) { m_mass = mass; }
+    void       setFrictionCoef(ValueType const& friction_coef)
+    {
+      m_friction_coef
+        = std::clamp(friction_coef, frictionCoefMin, frictionCoefMax);
+    }
 
     // Other stuff
     /** a; in the "parent" spacial frame */
@@ -69,16 +76,13 @@ namespace dte3607::coldet::rigidbodies
 
 
 
-  public:
-    std::string m_name;
-
   private:
     SpaceObjectFrame m_object;
     Timepoint        m_timepoint;
     Vector3          m_velocity{0, 0, 0};
     ValueType        m_radius{1.0};
     ValueType        m_mass{1.0};
-    ValueType        m_friction_coef{0.0};
+    ValueType        m_friction_coef{0.0};   // 0 == no friction
     States           m_state{States::Free};
 
 
@@ -86,18 +90,17 @@ namespace dte3607::coldet::rigidbodies
     {
       return m_object.vSpaceFrameParent();
     }
+
+  public:
+    std::string m_name;
   };
 
 
   struct FixedPlane {
     FixedPlane(types::Vector3 const& n, std::string name = {})
-      : m_name{name}, m_n{n}
+      : m_n{n}, m_name{name}
     {
     }
-
-    // Concept requirements
-
-
     // Concept requirements
     using ValueType        = types::Point3::ElementType;
     using Point3           = types::Point3;
@@ -107,6 +110,10 @@ namespace dte3607::coldet::rigidbodies
     using SpaceObjectFrame = types::ProjectiveSpaceObject;
     using Timepoint        = types::HighResolutionTP;
 
+    // Class type constants
+    static constexpr ValueType frictionCoefMin{0.0};
+    static constexpr ValueType frictionCoefMax{1.0};
+
     // Lin. alg. prop. access
     SpaceObjectFrame& spaceObjectFrame() { return m_object; }
 
@@ -115,16 +122,21 @@ namespace dte3607::coldet::rigidbodies
     Point3 normal() const { return m_object.vSpaceFrameParent() * m_n; }
 
     ValueType  frictionCoef() const { return m_friction_coef; }
+    void       setFrictionCoef(ValueType const& friction_coef)
+    {
+      m_friction_coef
+        = std::clamp(friction_coef, frictionCoefMin, frictionCoefMax);
+    }
 
     // Concept requirements END
-
-  public:
-    std::string m_name;
 
   private:
     SpaceObjectFrame m_object;
     Vector3          m_n{0, 1, 0};
     ValueType        m_friction_coef{0.0};
+
+  public:
+    std::string m_name;
   };
 
 }   // namespace dte3607::coldet::rigidbodies
