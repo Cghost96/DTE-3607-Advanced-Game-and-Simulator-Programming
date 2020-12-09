@@ -248,8 +248,8 @@ inline std::unique_ptr<scenario_fixtures::FixtureOsFp> constructScenario003() {
     auto const p3 = types::Vector3{-10, 5, 10};
     auto const v3 = types::Vector3{10000, 0, 0};
 
-    detail::add_sphere(*fixture, "S1", v1, p1, 1);
-    detail::add_sphere(*fixture, "S2", v2, p2, 1);
+//    detail::add_sphere(*fixture, "S1", v1, p1, 1);
+//    detail::add_sphere(*fixture, "S2", v2, p2, 1);
     detail::add_sphere(*fixture, "S3", v3, p3, 1);
 
     // Setup fixed planes

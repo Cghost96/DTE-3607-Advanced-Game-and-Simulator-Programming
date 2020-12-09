@@ -39,6 +39,7 @@ inline std::optional<types::ValueType> detectCollisionSphereFixedPlane(
 
     // Handle singularities
 //    if (std::abs(inner_ds_n) < 1e-5 || std::abs(inner_d_n) < 1e-5)
+//        return {std::nullopt};
     if (std::abs(inner_ds_n) < 1e-5) return {std::nullopt};
 
     // Check collision

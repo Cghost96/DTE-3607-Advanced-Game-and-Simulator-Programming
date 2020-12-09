@@ -77,6 +77,9 @@ template <typename SolverDevFixture_T>
 requires concepts::scenario_fixtures::solver_dev::SolverDevFixtureStep1 <
 SolverDevFixture_T > void
 solve(SolverDevFixture_T& scenario, types::NanoSeconds timestep) {
+
+    // Algorithm 2 - Collision detection algorithm
+
     TP const    t_0 = Clock::now();
     Collisions  C   = {};
     auto const& F   = scenario.fixedPlanes();
@@ -86,7 +89,6 @@ solve(SolverDevFixture_T& scenario, types::NanoSeconds timestep) {
         o->timepoint() = t_0;
     }
 
-    // Algorithm 2 - Collision detection algorithm
     for (auto& o : O) {
         for (auto& f : F) { // Algorithm 3 - Detect collision of a single non-fixed sphere
             auto const collision = mechanics::detectCollisionSphereFixedPlane(
