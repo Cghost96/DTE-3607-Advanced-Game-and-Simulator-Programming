@@ -101,6 +101,25 @@ namespace dte3607::coldet::concepts
       { obj.radius() } -> std::convertible_to<typename Sphere_T::ValueType>;
     };
 
+    template <typename FixedLimitedPlane_T>
+    concept IsLimitedPlane = requires(FixedLimitedPlane_T obj, typename FixedLimitedPlane_T::ValueType u)
+    {
+      { obj.point() } ->std::convertible_to<typename FixedLimitedPlane_T::Point3>;
+      { obj.normalFront() } ->std::convertible_to<typename FixedLimitedPlane_T::Vector3>;
+      { obj.normalBack() } ->std::convertible_to<typename FixedLimitedPlane_T::Vector3>;
+      { obj.partialDerivativeU() } ->std::convertible_to<typename FixedLimitedPlane_T::Vector3>;
+      { obj.partialDerivativeV() } ->std::convertible_to<typename FixedLimitedPlane_T::Vector3>;
+      { obj.evaluateFront(u,u) } ->std::convertible_to<typename FixedLimitedPlane_T::Point3>;
+      { obj.evaluateBack(u,u) } ->std::convertible_to<typename FixedLimitedPlane_T::Point3>;
+    };
+
+
+    template <typename BezierSurface_T>
+    concept IsBezierSurface = requires(BezierSurface_T& obj)
+    {
+      {obj.bezierSurface() } -> std::convertible_to<typename BezierSurface_T::BezSurfType>;
+    };
+
   }   // namespace geometry
 
 }   // namespace dte3607::coldet::concepts

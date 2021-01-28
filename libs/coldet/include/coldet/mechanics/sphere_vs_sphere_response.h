@@ -2,47 +2,68 @@
 #define DTE3607_COLDET_MECHANICS_SPHERE_VS_SPHERE_RESPONSE_H
 
 #include "../bits/types.h"
-#include "../../../3rdparty/gmlib2/include/gmlib/core/gm2_blaze.h"
+#include "../bits/rigidbodies.h"
+#include "../mechanics/compute_trajectory.h"
+#include "../utils/state_computations.h"
+#include "../utils/energy_computations.h"
+
 #include <blaze/Math.h>
 #include <cmath>
 
 namespace dte3607::coldet::mechanics {
 
-inline
-//template <concepts::Vector Vector_T, std::floating_point Scalar_T>
-std::pair<types::Vector3, types::Vector3>
-computeImpactResponseSphereSphere(
-    [[maybe_unused]] types::Point3 const&  s1_p,
-    [[maybe_unused]] types::Vector3 const& s1_v,
-    [[maybe_unused]] types::ValueType      s1_mass,
-    [[maybe_unused]] types::Point3 const&  s2_p,
-    [[maybe_unused]] types::Vector3 const& s2_v,
-    [[maybe_unused]] types::ValueType      s2_mass) {
-    auto const p_0 = s1_p;
-    auto const p_1 = s2_p;
-    auto const v_0 = s1_v;
-    auto const v_1 = s2_v;
-    auto const m_0 = s1_mass;
-    auto const m_1 = s2_mass;
-    auto const d   = blaze::evaluate(blaze::normalize(p_1 - p_0)); // Force blaze to assign a type
-    auto const liv_d = gm::algorithms::linearIndependentVector(d);
-    auto const n = blaze::normalize(blaze::cross(liv_d, d));
-    auto const inner_v_0_d = blaze::inner(v_0, d);
-    auto const inner_v_1_d = blaze::inner(v_1, d);
-    auto const inner_v_0_n = blaze::inner(v_0, n);
-    auto const inner_v_1_n = blaze::inner(v_1, n);
-    auto const v_prime_0_d = (((m_0 - m_1) / (m_0 + m_1)) * inner_v_0_d)
-                             + (((2 * m_1) / (m_0 + m_1)) * inner_v_1_d);
-    auto const v_prime_1_d = (((m_1 - m_0) / (m_0 + m_1)) * inner_v_1_d)
-                             + (((2 * m_0) / (m_0 + m_1)) * inner_v_0_d);
-    auto const v_prime_0 = inner_v_0_n * n + v_prime_0_d * d;
-    auto const v_prime_1 = inner_v_1_n * n + v_prime_1_d * d;
+  using States         = rigidbodies::Sphere::States;
+  using Sphere         = rigidbodies::Sphere;
+  using FixedPlane     = rigidbodies::FixedPlane;
+  using SFPAttachments = std::unordered_map<Sphere*, FixedPlane*>;
+  using V3             = types::Vector3;
+  using P3             = types::Point3;
+  using VT             = types::ValueType;
 
-    return {v_prime_0, v_prime_1};
-}
+  inline std::pair<V3, V3> computeImpactResponseSphereSphere(P3 const& p1, V3 const& v1, VT const& m1,
+                                                             P3 const& p2, V3 const& v2, VT const& m2) {
+    auto const d          = blaze::evaluate(blaze::normalize(p2 - p1));
+    auto const inner_v1_d = blaze::inner(v1, d) * d;
+    auto const inner_v2_d = blaze::inner(v2, d) * d;
+    auto const v1_remain  = v1 - inner_v1_d;
+    auto const v2_remain  = v2 - inner_v2_d;
+    auto const v_prime1_d = (((m1 - m2) / (m1 + m2)) * inner_v1_d) + (((2 * m2) / (m1 + m2)) * inner_v2_d);
+    auto const v_prime2_d = (((m2 - m1) / (m1 + m2)) * inner_v2_d) + (((2 * m1) / (m1 + m2)) * inner_v1_d);
+    auto const v_prime1   = v1_remain + v_prime1_d;
+    auto const v_prime2   = v2_remain + v_prime2_d;
 
+    return {v_prime1, v_prime2};
+  }
+
+  inline std::tuple<V3, V3, V3, V3>
+  computeImpactResponseSphereSphereWithStates(Sphere* o1, Sphere* o2, SFPAttachments const& attachments) {
+    auto [v1_original, v2_original] = computeImpactResponseSphereSphere(
+      o1->point(), o1->velocity(), o1->mass(), o2->point(), o2->velocity(), o2->mass());
+
+    auto getAdjustedVelocity = [&attachments](Sphere* o, V3 v) -> V3 {
+      if (o->state() == States::Free) return v;
+      auto const attachedPlane = attachments.at(o);
+      auto       v_adjusted    = getParallelVelocity(v, attachedPlane->normal());   // Helper in S-P response
+      return v_adjusted;
+    };
+
+    return std::make_tuple(getAdjustedVelocity(o1, v1_original), v1_original,
+                           getAdjustedVelocity(o2, v2_original), v2_original);
+  }
+
+  inline std::tuple<V3, V3, V3, V3>
+  computeImpactResponseSphereSphereWithStates(Sphere* o1, Sphere* o2, SFPAttachments const& attachments,
+                                              VT const& µ1, VT const& µ2) {
+    auto [v1_adj, v1_orig, v2_adj, v2_orig]
+      = computeImpactResponseSphereSphereWithStates(o1, o2, attachments);
+    utils::energy::dampening::addTimeIndependentLoss(v1_adj, µ1, µ2);
+    utils::energy::dampening::addTimeIndependentLoss(v1_orig, µ1, µ2);
+    utils::energy::dampening::addTimeIndependentLoss(v2_adj, µ1, µ2);
+    utils::energy::dampening::addTimeIndependentLoss(v2_orig, µ1, µ2);
+    return std::make_tuple(v1_adj, v1_orig, v2_adj, v2_orig);
+  }
 
 }   // namespace dte3607::coldet::mechanics
 
 
-#endif // DTE3607_COLDET_MECHANICS_SPHERE_VS_SPHERE_RESPONSE_H
+#endif   // DTE3607_COLDET_MECHANICS_SPHERE_VS_SPHERE_RESPONSE_H

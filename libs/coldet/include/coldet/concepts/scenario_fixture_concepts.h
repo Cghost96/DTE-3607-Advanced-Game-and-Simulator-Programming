@@ -71,6 +71,19 @@ namespace dte3607::coldet::concepts::scenario_fixtures
       concept HasGlobalGravitation =
           requires { typename ScenarioFixture_T::Forces::G; };
 
+      template <typename ScenarioFixture_T>
+      concept HasFixedLimitedPlanes =
+          geometry::IsLimitedPlane<typename ScenarioFixture_T::FixedLimitedPlane> and
+          requires(ScenarioFixture_T obj) { {obj.fixedLimitedPlanes()}; } and
+          requires(ScenarioFixture_T const obj) { {obj.fixedLimitedPlanes()}; };
+
+      template <typename ScenarioFixture_T>
+      concept HasFixedBezierSurfaces =
+          geometry::IsBezierSurface<typename ScenarioFixture_T::FixedBezierSurface> and
+          requires(ScenarioFixture_T obj) { {obj.fixedBezierSurfaces()}; } and
+          requires(ScenarioFixture_T const obj) { {obj.fixedBezierSurfaces()}; };
+
+
     }   // namespace components
 
 
@@ -100,6 +113,10 @@ namespace dte3607::coldet::concepts::scenario_fixtures
         components::HasSpheresWithFrictionCoef<ScenarioFixture_T> and
         components::HasSpheresWithStates<ScenarioFixture_T>;
 
+    template <typename ScenarioFixture_T>
+    concept SolverDevFixtureStep4 =
+        SolverDevFixtureStep3a<ScenarioFixture_T> and
+        SolverDevFixtureStep3b<ScenarioFixture_T>;
 
   }   // namespace solver_dev
 

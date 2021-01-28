@@ -6,7 +6,7 @@ import QtQuick3D
 import QtQuick3D.Helpers
 
 import "../scenes/"
-import "."
+//import "."
 
 Rectangle {
 
@@ -30,12 +30,12 @@ Rectangle {
     blenderIconRow: 0
     blenderIconAltSource: "qrc:/resources/icons/blender2.8/a22.png"
     // For debugging
-    ScenarioListModelViewOverlay {
-        anchors.bottom: parent.bottom
-        anchors.right: parent.right
-        width: 500
-        height: 500
-    }
+//    ScenarioListModelViewOverlay {
+//        anchors.bottom: parent.bottom
+//        anchors.right: parent.right
+//        width: 500
+//        height: 500
+//    }
   }
 
   ColumnLayout {

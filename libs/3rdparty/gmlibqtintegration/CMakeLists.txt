@@ -60,6 +60,7 @@ set( ${PROJECT_NAME}_MOC_HEADERS
   include/gmlibqtintegration/geometry/surfaces/tensorproduct/planegeometry.h
   include/gmlibqtintegration/geometry/surfaces/tensorproduct/torusgeometry.h
   include/gmlibqtintegration/geometry/surfaces/tensorproduct/spheregeometry.h
+  include/gmlibqtintegration/geometry/surfaces/tensorproduct/beziersurfacegeometry.h
   include/gmlibqtintegration/geometry/surfaces/tensorproduct/planeintensorproductsurfacegeometry.h
 
   include/gmlibqtintegration/geometry/surfaces/polygonal/polygonsurfacegeometry.h

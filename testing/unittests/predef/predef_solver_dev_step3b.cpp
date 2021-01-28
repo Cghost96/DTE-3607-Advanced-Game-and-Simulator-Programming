@@ -27,7 +27,7 @@ struct SolverDevStep3b_Fixture001 : ::testing::Test {
   using FixedPlane = rigidbodies::FixedPlane;
   using Sphere     = rigidbodies::Sphere;
 
-  using TestFixture = scenario_fixtures::FixtureOsFp;
+  using TestFixture = scenario_fixtures::FixtureOsFpPsfp_sa;
   std::unique_ptr<TestFixture> m_fixture;
   Sphere*                      m_the_sphere;
 
@@ -72,7 +72,7 @@ struct SolverDevStep3b_Fixture002 : ::testing::Test {
   using FixedPlane = rigidbodies::FixedPlane;
   using Sphere     = rigidbodies::Sphere;
 
-  using TestFixture = scenario_fixtures::FixtureOsFp;
+  using TestFixture = scenario_fixtures::FixtureOsFpPsfp_sa;
   std::unique_ptr<TestFixture> m_fixture;
   Sphere*                      m_the_sphere;
 
@@ -121,7 +121,7 @@ struct SolverDevStep3b_Fixture003 : ::testing::Test {
   using FixedPlane = rigidbodies::FixedPlane;
   using Sphere     = rigidbodies::Sphere;
 
-  using TestFixture = scenario_fixtures::FixtureOsFp;
+  using TestFixture = scenario_fixtures::FixtureOsFpPsfp_sa;
   std::unique_ptr<TestFixture> m_fixture;
   Sphere*                      m_the_sphere;
 
@@ -174,7 +174,7 @@ struct SolverDevStep3b_Fixture004 : ::testing::Test {
   using FixedPlane = rigidbodies::FixedPlane;
   using Sphere     = rigidbodies::Sphere;
 
-  using TestFixture = scenario_fixtures::FixtureOsFp;
+  using TestFixture = scenario_fixtures::FixtureOsFpPsfp_sa;
   std::unique_ptr<TestFixture> m_fixture;
   Sphere*                      m_the_sphere;
 
@@ -232,7 +232,7 @@ struct SolverDevStep3b_Fixture005 : ::testing::Test {
   using FixedPlane = rigidbodies::FixedPlane;
   using Sphere     = rigidbodies::Sphere;
 
-  using TestFixture = scenario_fixtures::FixtureOsFp;
+  using TestFixture = scenario_fixtures::FixtureOsFpPsfp_sa;
   std::unique_ptr<TestFixture> m_fixture;
   Sphere*                      m_the_sphere;
 

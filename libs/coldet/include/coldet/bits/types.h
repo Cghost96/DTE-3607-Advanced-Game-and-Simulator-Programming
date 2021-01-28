@@ -9,15 +9,17 @@
 #include <chrono>
 #include <cstdint>
 
-namespace dte3607::coldet::types {
-// Point and Vector and Frame
-using ValueType = double;
-using Point3    = gm::VectorT<ValueType, 3>;
-using Point3H   = gm::VectorT<ValueType, 4>;
-using Vector3   = gm::VectorT<ValueType, 3>;
-using Vector3H  = gm::VectorT<ValueType, 4>;
-using Frame3    = gm::SqMatrixT<ValueType, 3>;
-using Frame3H   = gm::SqMatrixT<ValueType, 4>;
+namespace dte3607::coldet::types
+{
+  // Point and Vector and Frame
+  using ValueType  = double;
+  using Point3     = gm::VectorT<ValueType, 3>;
+  using Point3H    = gm::VectorT<ValueType, 4>;
+  using Vector3    = gm::VectorT<ValueType, 3>;
+  using Vector3H   = gm::VectorT<ValueType, 4>;
+  using Frame3     = gm::SqMatrixT<ValueType, 3>;
+  using Frame3H    = gm::SqMatrixT<ValueType, 4>;
+  using ControlNet = gm::DMatrixT<Point3>;
 
 
 // Clock
@@ -40,7 +42,6 @@ using Duration = NanoSeconds;
 using Dt       = SecondsD;
 using DtNano = NanoSecondsD;
 using DtRep    = Dt::rep;
-
 
 // Spatial objects
 using ProjectiveSpaceObject

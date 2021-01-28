@@ -15,6 +15,7 @@ set(${PROJECT_NAME}_SOURCES
   scenariolistmodel.cpp
   simulationcontroller.cpp
   simulationloopworker.cpp
+  limitedplanegeometry.cpp
   )
 
 ### Qt MOC HEADERS
@@ -25,6 +26,7 @@ set( ${PROJECT_NAME}_MOC_HEADERS
   scenariolistmodel.h
   simulationcontroller.h
   simulationloopworker.h
+  limitedplanegeometry.h
   )
 
 ### Qt Resources -- "RESOURCES_QML"
@@ -38,11 +40,14 @@ set( ${PROJECT_NAME}_RESOURCES_QML_FILES
     "resources/qml/gui/ScenarioListModelViewOverlay.qml"
     "resources/qml/gui/WorkSpace01.qml"
     "resources/qml/gui/WorkSpace02.qml"
+    "resources/qml/gui/WorkSpace03.qml"
     "resources/qml/scenes/DefaultLighting.qml"
     "resources/qml/scenes/DefaultCameras.qml"
     "resources/qml/scenes/ScenarioModelView01.qml"
+    "resources/qml/scenes/ScenarioModelView02.qml"
     "resources/qml/scenes/Scene01.qml"
     "resources/qml/scenes/Scene02.qml"
+    "resources/qml/scenes/Scene03.qml"
   )
 
 ### Qt Resources -- "RESOURCES_GFX" -- small (size)
@@ -55,6 +60,19 @@ set( ${PROJECT_NAME}_RESOURCES_GFX_FILES
     "resources/gfx/uit_logo/uit_segl_eng_bla_960px.png"
     "resources/gfx/uit_logo/uit_segl_eng_hvit_960px.png"
     "resources/gfx/uit_logo/uit_segl_eng_sort_960px.png"
+    "resources/gfx/quick3d_quickball_example/ball.jpg"
+    "resources/gfx/quick3d_quickball_example/ball_n.jpg"
+    "resources/gfx/quick3d_quickball_example/grass.jpg"
+    "resources/gfx/quick3d_quickball_example/grass_n.jpg"
+  )
+
+### Qt Resources -- "RESOURCES_SHADERS" -- small (size)
+set( ${PROJECT_NAME}_RESOURCES_SHADERS_PREFIX "/" )
+set( ${PROJECT_NAME}_RESOURCES_SHADERS_FILES
+    "resources/shaders/quick3d_custommaterial_example/material_customlights.frag"
+    "resources/shaders/quick3d_custommaterial_example/material_customspecular.frag"
+    "resources/shaders/quick3d_custommaterial_example/material_distortion.vert"
+    "resources/shaders/quick3d_custommaterial_example/material_transparent.frag"
   )
 
 ### Qt Resources -- "RESOURCES_BLENDER28_ICONS" -- also smaal
@@ -63,10 +81,15 @@ set( ${PROJECT_NAME}_RESOURCES_BLENDER28_ICONS_FILES
     "resources/icons/blender2.8/blender2.8_icons_2019-06-04.svg"
     "resources/icons/blender2.8/a22.png" # svg load fails on wintendo
     "resources/icons/blender2.8/a23.png" # svg load fails on wintendo
+    "resources/icons/blender2.8/aa2.png" # svg load fails on wintendo
+    "resources/icons/blender2.8/aa3.png" # svg load fails on wintendo
+    "resources/icons/blender2.8/aa6.png" # svg load fails on wintendo
     "resources/icons/blender2.8/b4.png"  # svg load fails on wintendo
     "resources/icons/blender2.8/d17.png" # svg load fails on wintendo
     "resources/icons/blender2.8/h20.png" # svg load fails on wintendo
     "resources/icons/blender2.8/j4.png"  # svg load fails on wintendo
+    "resources/icons/blender2.8/z1.png"  # svg load fails on wintendo
+    "resources/icons/blender2.8/z8.png"  # svg load fails on wintendo
   )
 
 
@@ -147,6 +170,14 @@ qt_add_resources( ${PROJECT_NAME}_QT_OBJS "RESOURCES_QML"
     ${${PROJECT_NAME}_RESOURCES_QML_PREFIX}
   FILES
     ${${PROJECT_NAME}_RESOURCES_QML_FILES}
+  )
+
+# Compile Qt Shader Resources
+qt_add_resources( ${PROJECT_NAME}_QT_OBJS "RESOURCES_SHADERS"
+  PREFIX
+    ${${PROJECT_NAME}_RESOURCES_SHADERS_PREFIX}
+  FILES
+    ${${PROJECT_NAME}_RESOURCES_SHADERS_FILES}
   )
 
 # Compile GFX Resources (SMALL IN SIZE -- WILL BE PART OF EXE)

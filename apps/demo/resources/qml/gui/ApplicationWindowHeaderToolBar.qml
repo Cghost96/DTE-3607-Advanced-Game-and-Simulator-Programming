@@ -35,9 +35,19 @@ ToolBar {
         anchors.fill: parent
         subImgColumn: 19
         subImgRow: 7
-        altSource: "qrc:/resources/icons/blender2.8/h20.png"
+        altSource: "qrc:/resources/icons/blender2.8/z1.png"
       }
       onClicked: root.state = "Workspace01"
+    }
+    ToolSeparator{}
+    ToolButton { // text: qsTr("Work (textured spheres)"); font: glob.hfont_h
+      BlenderIconImage {
+        anchors.fill: parent
+        subImgColumn: 3
+        subImgRow: 1
+        altSource: "qrc:/resources/icons/blender2.8/aa2.png"
+      }
+      onClicked: root.state = "Workspace02"
     }
     ToolSeparator{}
     ToolButton { // text: qsTr("Demo"); font: glob.hfont_h
@@ -45,9 +55,9 @@ ToolBar {
         anchors.fill: parent
         subImgColumn: 3
         subImgRow: 1
-        altSource: "qrc:/resources/icons/blender2.8/b4.png"
+        altSource: "qrc:/resources/icons/blender2.8/aa6.png"
       }
-      onClicked: root.state = "Workspace02"
+      onClicked: root.state = "Workspace03"
     }
     //      ToolSeparator{}
     //      ToolButton { text: qsTr("Fancy"); font: glob.hfont_h

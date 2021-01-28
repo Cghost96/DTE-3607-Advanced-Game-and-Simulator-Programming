@@ -1,5 +1,5 @@
-#ifndef GM2_PARAMETRIC_CURVE_PLANE_H
-#define GM2_PARAMETRIC_CURVE_PLANE_H
+#ifndef GM2_PARAMETRIC_SURFACE_PLANE_H
+#define GM2_PARAMETRIC_SURFACE_PLANE_H
 
 
 #include "../tensorproductsurface.h"
@@ -147,4 +147,4 @@ namespace gm::parametric
 
 }   // namespace gm::parametric
 
-#endif   // GM2_PARAMETRIC_CURVE_PLANE_H
+#endif   // GM2_PARAMETRIC_SURFACE_PLANE_H

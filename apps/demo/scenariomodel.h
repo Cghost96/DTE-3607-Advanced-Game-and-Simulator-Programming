@@ -8,9 +8,6 @@
 // coldet
 #include <coldet/bits/types.h>
 
-// gmlib qt integration
-#include <gmlibqtintegration/geometry/surfaces/tensorproduct/planegeometry.h>
-#include <gmlibqtintegration/geometry/surfaces/tensorproduct/spheregeometry.h>
 
 // qt
 #include <QAbstractListModel>
@@ -51,12 +48,20 @@ namespace app
       GeometryType,
 
       FrameOrigin,
-      Velocity
+      Velocity,
+      EulerRotation,
+      Radius
     };
 
     void resetScenario(std::weak_ptr<ScenarioWrapperBase> scenario);
 
-    enum class GeometryType : int { NA, Sphere, Plane };
+    enum class GeometryType : int {
+      NA = int(ScenarioWrapperBase::GeometryType::NA),
+      Sphere,
+      Plane,
+      LimitedPlane,
+      BezierSurface
+    };
     Q_ENUM(GeometryType)
 
     GeometryType geometryType(const QModelIndex& index) const;
@@ -70,6 +75,10 @@ namespace app
                         int                role = Qt::DisplayRole) const;
     QVariant planeData(const QModelIndex& index,
                        int                role = Qt::DisplayRole) const;
+    QVariant limitedPlaneData(const QModelIndex& index,
+                              int                role = Qt::DisplayRole) const;
+    QVariant bezierSurfaceData(const QModelIndex& index,
+                               int                role = Qt::DisplayRole) const;
 
     // optional
     QHash<int, QByteArray> roleNames() const override;

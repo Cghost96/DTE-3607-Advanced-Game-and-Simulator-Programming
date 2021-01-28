@@ -21,8 +21,7 @@
 #include <QtQuick3D/QQuick3D>
 #include <QPointer>
 
-namespace app
-{
+namespace app {
 
 
   class GuiApplication : public QGuiApplication {
@@ -59,12 +58,32 @@ namespace app
 
     void registerScenario012AlgStep3a();
 
+    void registerScenario013AlgStep3b();
+    void registerScenario014AlgStep3b();
+    void registerScenario015AlgStep3b();
+    void registerScenario016AlgStep3b();
+    void registerScenario017AlgStep3b();
+    void registerScenario018AlgStep3b();
+    void registerScenario019AlgStep3b();
+
+    void registerScenario019AlgStep4();
+
 
     // Original test scenarios and alg steps [1 - 3a]
     void registerOriginalStep0TestScenario();
     void registerOriginalStep1TestScenario();
     void registerOriginalStep2TestScenario();
     void registerOriginalStep3aTestScenario();
+
+    // Some scenarios for component testing
+    void registerComponentTestingScenario01();
+    void registerComponentTestingScenario02();
+    void registerComponentTestingScenario03();
+
+    /* --------------------------------------------------------------------------------- */
+    /* ------------------------------- PROJECT SCENARIOS ------------------------------- */
+    /* --------------------------------------------------------------------------------- */
+    void registerScenarioGaltonInitTest();
 
   private:
     QQmlApplicationEngine m_engine;
@@ -82,8 +101,7 @@ namespace app
 
 
     template <typename ConstructorLambda_T, typename SolverLambda_T>
-    void registerScenario(std::string const& name, ConstructorLambda_T ctr_fn,
-                          SolverLambda_T slv_fn);
+    void registerScenario(std::string const& name, ConstructorLambda_T ctr_fn, SolverLambda_T slv_fn);
 
     void doResetScenario(ScenarioWPtr scenario);
 

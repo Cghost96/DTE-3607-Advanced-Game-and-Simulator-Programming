@@ -99,7 +99,19 @@ ApplicationWindow {
           target: glob
           stats_view: ws02.stats_view
         }
+      },
+      State { name: "Workspace03"
+        PropertyChanges {
+          target: ws03
+          visible: true
+          enabled: true
+        }
+        PropertyChanges {
+          target: glob
+          stats_view: ws03.stats_view
+        }
       }
+
     ]
 
     state: "Workspace01"
@@ -116,6 +128,13 @@ ApplicationWindow {
       enabled: false
       visible: false
       id: ws02
+    }
+
+    WorkSpace03 {
+      anchors.fill: parent
+      enabled: false
+      visible: false
+      id: ws03
     }
 
   }

@@ -28,6 +28,9 @@ namespace app
   using Point3H   = dte3607::coldet::types::Point3H;
   using Vector3   = dte3607::coldet::types::Vector3;
   using Vector3H  = dte3607::coldet::types::Vector3H;
+  using Frame3    = dte3607::coldet::types::Frame3;
+  using Frame3H   = dte3607::coldet::types::Frame3H;
+  using ControlNet = dte3607::coldet::types::ControlNet;
 
 }   // namespace app
 

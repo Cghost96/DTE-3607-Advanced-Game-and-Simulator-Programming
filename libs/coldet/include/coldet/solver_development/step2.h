@@ -17,7 +17,6 @@
 namespace dte3607::coldet::solver_dev::step2 {
 
 using namespace std::chrono;
-using namespace std::chrono_literals;
 
 using Sphere = rigidbodies::Sphere;
 using SpherePtr = std::unique_ptr<Sphere>;
@@ -31,11 +30,6 @@ struct Collision {
     Sphere* o;
     FixedPlane* f;
     bool remove;
-
-    // Is this needed?
-    bool operator > (const Collision& c) const {
-        return (tp > c.tp);
-    }
 };
 using Collisions = std::vector<Collision>;
 
@@ -58,7 +52,7 @@ void sortAndMakeUnique(Collisions& C) {
 
     std::sort(C.begin(), C.end(),
               [](Collision c1, Collision c2) -> bool { return c1.tp < c2.tp; });
-    std::reverse(C.begin(), C.end());
+//    std::reverse(C.begin(), C.end());
 
     std::set<Sphere*> unique_collisions;
 
@@ -78,10 +72,10 @@ void sortAndMakeUnique(Collisions& C) {
 template <typename SolverDevFixture_T>
 requires concepts::scenario_fixtures::solver_dev::SolverDevFixtureStep2 <
 SolverDevFixture_T > void
-solve([[maybe_unused]] SolverDevFixture_T& scenario,
-      [[maybe_unused]] types::NanoSeconds  timestep) {
+solve(SolverDevFixture_T& scenario,
+      types::NanoSeconds  timestep) {
 
-    // Algorithm 5 - Collision detection algorithm
+    // Algorithm 7 - Collision detection algorithm
     TP const    t_0 = Clock::now();
     Collisions  C   = {};
     auto const& F   = scenario.fixedPlanes();
@@ -123,8 +117,12 @@ solve([[maybe_unused]] SolverDevFixture_T& scenario,
                            s->velocity(), fp->normal()));
 
         // Check for possible new collisions
-        //for (auto& o : O) {
         for (auto& f : F) {   // Algorithm 6 - Detect collision of a single non-fixed sphere in discretized time
+            // Check if the collision-object is the same as last object due to
+            // floating point inaccuracy
+            if(f.get() == fp)
+                continue;
+
             auto const collision = mechanics::detectCollisionSphereFixedPlane(
                                        s->timepoint(), s->point(), s->radius(), s->velocity(), f->point(),
                                        f->normal(), scenario.forces().G, t_0, timestep);
@@ -132,7 +130,7 @@ solve([[maybe_unused]] SolverDevFixture_T& scenario,
             if (collision) {
                 auto const c_dt
                     = collision.value()
-                      * (timestep - (s->timepoint() - t_0));   // timepos of s within current timestep
+                      * (timestep - (s->timepoint() - t_0)); // timepos of s within current timestep
                 auto const c_dt_cast
                     = std::chrono::duration_cast<types::NanoSeconds>(c_dt);
                 auto const c_tp
@@ -143,7 +141,6 @@ solve([[maybe_unused]] SolverDevFixture_T& scenario,
             }
             sortAndMakeUnique(C);
         }
-//        }
     }
 
     for(auto& sphere : scenario.spheres()) {
