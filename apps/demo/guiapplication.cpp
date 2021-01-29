@@ -14,7 +14,7 @@
 #include <coldet/solver_development/step3b.h>
 #include <coldet/solver_development/step4.h>
 #include <coldet/solver_development/testing_solvers.h>
-
+#include <coldet/mysolvers/rolling.h>
 
 namespace app {
 
@@ -382,7 +382,7 @@ namespace app {
   //      return dte3607::coldet::utils::scenario_factories::/*name of factory function*/();
   //    };
   //    auto slv_fn = [](auto& scenario, auto const& time_step) {
-  //      dte3607::coldet::solver_dev::/*step name*/::solve(scenario, time_step);
+  //      dte3607::coldet::mysolvers::/*step name*/::solve(scenario, time_step);
   //    };
 
   //    registerScenario("[Scenario name]", ctr_fn, slv_fn);
@@ -391,7 +391,7 @@ namespace app {
   void GuiApplication::registerScenarioGaltonInitTest() {
     auto ctr_fn = []() { return dte3607::coldet::utils::scenario_factories::constructGaltonInitTest(); };
     auto slv_fn = [](auto& scenario, auto const& time_step) {
-      dte3607::coldet::solver_dev::step3b::solve(scenario, time_step);   // TODO use project step
+      dte3607::coldet::mysolvers::rolling::solve(scenario, time_step);
     };
 
     registerScenario("Galton - init test", ctr_fn, slv_fn);

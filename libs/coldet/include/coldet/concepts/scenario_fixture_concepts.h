@@ -122,10 +122,8 @@ namespace dte3607::coldet::concepts::scenario_fixtures
 
 
   template <typename ScenarioFixture_T>
-  concept MySolverFixtureConcept01 = requires
-  {
-    {true};
-  };
+  concept SolverFixtureGaltonRolling =
+          solver_dev::SolverDevFixtureStep4<ScenarioFixture_T>;
 
 }   // namespace dte3607::coldet::concepts::scenario_fixtures
 
