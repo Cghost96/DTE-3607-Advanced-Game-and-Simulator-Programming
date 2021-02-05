@@ -37,6 +37,8 @@ namespace dte3607::coldet::rigidbodies {
     ValueType  mass() const { return m_mass; }
     ValueType  frictionCoef() const { return m_friction_coef; }
     Vector3    velocity() const { return m_velocity; }
+    Vector3    rotationNormal() const { return m_rotation_normal; }
+    ValueType  rotationSpeed() const { return m_rotation_speed; }
     Timepoint& timepoint() { return m_timepoint; }
     void       setMass(ValueType const& mass) { m_mass = mass; }
     void       setFrictionCoef(ValueType const& friction_coef) {
@@ -50,6 +52,10 @@ namespace dte3607::coldet::rigidbodies {
     /** v; in the "parent" spacial frame */
     void setVelocity(types::Vector3 const& v) { m_velocity = v; }
 
+    void setRotationNormal(types::Vector3 const& n) { m_rotation_normal = n; }
+
+    void setRotationSpeed(types::ValueType const& s) { m_rotation_speed = s; }
+
     // States
     enum class States { Free, Resting, Sliding, Rolling };
     States& state() { return m_state; }
@@ -60,6 +66,8 @@ namespace dte3607::coldet::rigidbodies {
     SpaceObjectFrame m_object;
     Timepoint        m_timepoint;
     Vector3          m_velocity{0, 0, 0};
+    Vector3          m_rotation_normal{0, 0, 0};
+    ValueType        m_rotation_speed{0.0};
     ValueType        m_mass{1.0};
     ValueType        m_friction_coef{0.0};   // 0 == no friction
     States           m_state{States::Free};

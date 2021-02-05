@@ -896,42 +896,190 @@ namespace dte3607::coldet::utils::scenario_factories {
   /* --------------------------------------------------------------------------------- */
 
   // ----- Scenario template -----
-  //  inline std::unique_ptr<scenario_fixtures::/*fixture type*/> construct/*function name*/() {
-  //    // constructor guidance
-  //    // detail::add_sphere(fixture, name, v0, p0, r, µ, state, m);
-  //    // detail::add_fixed_plane(fixture, name, p0, n, µ);
+  //  //  inline std::unique_ptr<scenario_fixtures::/*fixture type*/> construct/*function name*/() {
+  //  // add_sphere(fixture, name, v0, p0, r, µ, state, m);
+  //  // add_fixed_plane(fixture, name, p0, n, µ);
 
-  //    // Construct scenario
-  //    auto fixture = std::make_unique<scenario_fixtures::FixtureOsFpPsfp_sa>();
+  //  // Construct scenario
+  //  auto fixture = std::make_unique<scenario_fixtures::/*fixture type*/>();
 
-  //    // Setup global system
-  //    fixture->forces().G = types::Vector3{0, -9.833, 0};
+  //  // Setup global system
+  //  fixture->forces().G = types::Vector3{0, -9.833, 0};
 
-  //    // Objects
-  //    detail::add_sphere(*fixture, "sphere", std::get<0>(sd), std::get<1>(sd), 2, 0.1);
-  //    detail::add_fixed_plane(*fixture, "ground", {0, 0, 0}, {0, 1, 0}, 0.5);
+  //  // Objects
+  //  detail::add_sphere(*fixture, "sphere", {0, 0, 0}, {0, 10, 0}, 3.0, 0.5,
+  //  rigidbodies::Sphere::States::Free,
+  //                     1.0);
+  //  detail::add_fixed_plane(*fixture, "ground", {0, 0, 0}, {0, 1, 0}, 0.5);
 
-  //    return fixture;
+  //  return fixture;
   //  }
 
-  inline std::unique_ptr<scenario_fixtures::FixtureOsFpPsfp_sa> constructGaltonInitTest() {
+  inline std::unique_ptr<scenario_fixtures::FixtureOsFpPsfp_sa_ds> constructGaltonVerticalFallFlatGround01() {
     // add_sphere(fixture, name, v0, p0, r, µ, state, m);
     // add_fixed_plane(fixture, name, p0, n, µ);
 
     // Construct scenario
-    auto fixture = std::make_unique<scenario_fixtures::FixtureOsFpPsfp_sa>();
+    auto fixture = std::make_unique<scenario_fixtures::FixtureOsFpPsfp_sa_ds>();
 
     // Setup global system
     fixture->forces().G = types::Vector3{0, -9.833, 0};
 
     // Objects
-    detail::add_sphere(*fixture, "sphere", {0, 0, 0}, {0, 10, 0}, 3.0, 0.5, rigidbodies::Sphere::States::Free,
+    detail::add_sphere(*fixture, "S", {0, 0, 0}, {0, 10, 0}, 3.0, 0.5, rigidbodies::Sphere::States::Free,
                        1.0);
-    detail::add_fixed_plane(*fixture, "ground", {0, 0, 0}, {0, 1, 0}, 0.5);
+    detail::add_fixed_plane(*fixture, "Floor", {0, 0, 0}, {0, 1, 0}, 0.5);
 
     return fixture;
   }
 
+  inline std::unique_ptr<scenario_fixtures::FixtureOsFpPsfp_sa_ds> constructGaltonRollSlopedGround01() {
+    // add_sphere(fixture, name, v0, p0, r, µ, state, m);
+    // add_fixed_plane(fixture, name, p0, n, µ);
+
+    // Construct scenario
+    auto fixture = std::make_unique<scenario_fixtures::FixtureOsFpPsfp_sa_ds>();
+
+    // Setup global system
+    fixture->forces().G = types::Vector3{0, -9.81, 0};
+
+    // Objects
+    detail::add_sphere(*fixture, "S", {0, 0, 0}, {-16, 13, 0}, 1.5, 0.45, rigidbodies::Sphere::States::Free,
+                       200.0);
+    detail::add_fixed_plane(*fixture, "Floor", {0, 0, 0}, {0.5, 1, 0}, 0.45);
+
+    return fixture;
+  }
+
+  inline std::unique_ptr<scenario_fixtures::FixtureOsFpPsfp_sa_ds> constructGaltonRollSlopedGround02() {
+    // add_sphere(fixture, name, v0, p0, r, µ, state, m);
+    // add_fixed_plane(fixture, name, p0, n, µ);
+
+    // Construct scenario
+    auto fixture = std::make_unique<scenario_fixtures::FixtureOsFpPsfp_sa_ds>();
+
+    // Setup global system
+    fixture->forces().G = types::Vector3{0, -9.81, 0};
+
+    // Objects
+    detail::add_sphere(*fixture, "S", {0, 0, 0}, {16, 13, 0}, 1.5, 0.45, rigidbodies::Sphere::States::Free,
+                       200.0);
+    detail::add_fixed_plane(*fixture, "Floor", {0, 0, 0}, {-0.5, 1, 0}, 0.45);
+
+    return fixture;
+  }
+
+  inline std::unique_ptr<scenario_fixtures::FixtureOsFpPsfp_sa_ds> constructGaltonRollSlopedGround03() {
+    // add_sphere(fixture, name, v0, p0, r, µ, state, m);
+    // add_fixed_plane(fixture, name, p0, n, µ);
+
+    // Construct scenario
+    auto fixture = std::make_unique<scenario_fixtures::FixtureOsFpPsfp_sa_ds>();
+
+    // Setup global system
+    fixture->forces().G = types::Vector3{0, -9.81, 0};
+
+    // Objects
+    detail::add_sphere(*fixture, "S", {0, 0, 0}, {0, 13, -16}, 1.5, 0.45, rigidbodies::Sphere::States::Free,
+                       200.0);
+    detail::add_fixed_plane(*fixture, "Floor", {0, 0, 0}, {0, 1, 0.5}, 0.45);
+
+    return fixture;
+  }
+
+  inline std::unique_ptr<scenario_fixtures::FixtureOsFpPsfp_sa_ds> constructGaltonRollSlopedGround04() {
+    // add_sphere(fixture, name, v0, p0, r, µ, state, m);
+    // add_fixed_plane(fixture, name, p0, n, µ);
+
+    // Construct scenario
+    auto fixture = std::make_unique<scenario_fixtures::FixtureOsFpPsfp_sa_ds>();
+
+    // Setup global system
+    fixture->forces().G = types::Vector3{0, -9.81, 0};
+
+    // Objects
+    detail::add_sphere(*fixture, "S", {0, 0, 0}, {0, 13, 16}, 1.5, 0.45, rigidbodies::Sphere::States::Free,
+                       200.0);
+    detail::add_fixed_plane(*fixture, "Floor", {0, 0, 0}, {0, 1, -0.5}, 0.45);
+
+    return fixture;
+  }
+
+  inline std::unique_ptr<scenario_fixtures::FixtureOsFpPsfp_sa_ds> constructGaltonRollSlopedGround05() {
+    // add_sphere(fixture, name, v0, p0, r, µ, state, m);
+    // add_fixed_plane(fixture, name, p0, n, µ);
+
+    // Construct scenario
+    auto fixture = std::make_unique<scenario_fixtures::FixtureOsFpPsfp_sa_ds>();
+
+    // Setup global system
+    fixture->forces().G = types::Vector3{0, -9.81, 0};
+
+    // Objects
+    detail::add_sphere(*fixture, "S", {0, 0, 0}, {-46, 13, 0}, 1.5, 0.45, rigidbodies::Sphere::States::Free,
+                       200.0);
+    detail::add_sphere(*fixture, "S", {0, 0, 0}, {46, 13, 0}, 1.5, 0.45, rigidbodies::Sphere::States::Free,
+                       200.0);
+    detail::add_sphere(*fixture, "S", {0, 0, 0}, {0, 13, -46}, 1.5, 0.45, rigidbodies::Sphere::States::Free,
+                       200.0);
+    detail::add_sphere(*fixture, "S", {0, 0, 0}, {0, 13, 46}, 1.5, 0.45, rigidbodies::Sphere::States::Free,
+                       200.0);
+
+    detail::add_fixed_plane(*fixture, "Funnel +x", {-30, 0, 0}, {0.5, 1, 0}, 0.6);
+    detail::add_fixed_plane(*fixture, "Funnel -x", {30, 0, 0}, {-0.5, 1, 0}, 0.6);
+    detail::add_fixed_plane(*fixture, "Funnel +z", {0, 0, -30}, {0, 1, 0.5}, 0.6);
+    detail::add_fixed_plane(*fixture, "Funnel -z", {0, 0, 30}, {0, 1, -0.5}, 0.6);
+
+    return fixture;
+  }
+
+  inline std::unique_ptr<scenario_fixtures::FixtureOsFpPsfp_sa_ds>
+  constructGaltonRollingCollisionFlatGround01() {
+    // add_sphere(fixture, name, v0, p0, r, µ, state, m);
+    // add_fixed_plane(fixture, name, p0, n, µ);
+
+    // Construct scenario
+    auto fixture = std::make_unique<scenario_fixtures::FixtureOsFpPsfp_sa_ds>();
+
+    // Setup global system
+    fixture->forces().G = types::Vector3{0, -15, 0};
+
+    // Set up spheres
+    auto const p1 = types::Vector3{-75, 3.001, 0};
+    auto const v1 = types::Vector3{300, 0, 0};
+
+    auto const p2 = types::Vector3{5, 3.001, 0};
+    auto const v2 = types::Vector3{0, 0, 0};
+
+    detail::add_sphere(*fixture, "S1", v1, p1, 3, 0.5, rigidbodies::Sphere::States::Free, 0.8);
+    detail::add_sphere(*fixture, "S2", v2, p2, 3, 0.5, rigidbodies::Sphere::States::Free, 1.0);
+    // ADD INITIAL STATES AND FRICTION AND WEIGHT
+
+    // Setup fixed planes
+    detail::add_fixed_plane(*fixture, "floor", {0, 0, 0}, {0, 1, 0}, 0.5);
+
+    return fixture;
+  }
+
+  inline std::unique_ptr<scenario_fixtures::FixtureOsFpPsfp_sa_ds> constructGaltonRollingCollisionAir01() {
+    //     add_sphere(fixture, name, v0, p0, r, µ, state, m);
+    //     add_fixed_plane(fixture, name, p0, n, µ);
+
+    // Construct scenario
+    auto fixture = std::make_unique<scenario_fixtures::FixtureOsFpPsfp_sa_ds>();
+
+    // Setup global system
+    fixture->forces().G = types::Vector3{0, -9.833, 0};
+
+    // Objects
+    detail::add_sphere(*fixture, "S1", {50, 3, 50}, {4, 10, 4}, 3.0, 0.6, rigidbodies::Sphere::States::Free,
+                       1.5);
+    detail::add_sphere(*fixture, "S2", {-50, 3, -50}, {13.5, 10, 21.5}, 3.0, 0.6,
+                       rigidbodies::Sphere::States::Free, 1.5);
+    detail::add_fixed_plane(*fixture, "ground", {0, 0, 0}, {0, 1, 0}, 0.5);
+
+    return fixture;
+  }
 
 }   // namespace dte3607::coldet::utils::scenario_factories
 

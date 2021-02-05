@@ -139,7 +139,7 @@ namespace dte3607::coldet::solver_dev::step3b {
     auto handle_response = [force, &attachments, &dt_next](Sphere* o, V3 v_adj, V3 v_orig) -> void {
       if (o->state() != States::Free) {
         auto [ds_next, a_next] = mechanics::computeLinearTrajectory(v_orig, force, dt_next);
-        utils::state::detectStateChangeOF(o, attachments.at(o), attachments, ds_next);
+        utils::state::detectStateChange(o, attachments.at(o), attachments, ds_next);
         o->setVelocity((o->state() == States::Free) ? v_orig : v_adj);
       }
       else
@@ -157,7 +157,7 @@ namespace dte3607::coldet::solver_dev::step3b {
     auto const   response   = mechanics::computeImpactResponseSphereFixedPlane(c.o, c.f);
     States const prev_state = c.o->state();
     auto [ds_next, a_next]  = mechanics::computeLinearTrajectory(response, force, dt_next);
-    utils::state::detectStateChangeOF(c.o, plane, attachments, ds_next);
+    utils::state::detectStateChange(c.o, plane, attachments, ds_next);
     c.o->setVelocity(c.o->state() != prev_state ? mechanics::computeImpactResponseSphereFixedPlane(c.o, c.f)
                                                 : response);
   }
@@ -290,7 +290,7 @@ namespace dte3607::coldet::solver_dev::step3b {
       if (o->state() == States::Sliding) {
         auto [ds_next, a_next] = mechanics::computeLinearTrajectory(o->velocity(), G, timestep);
         auto const plane       = attachments.at(o.get());
-        utils::state::detectStateChangeOF(o.get(), plane, attachments, ds_next);
+        utils::state::detectStateChange(o.get(), plane, attachments, ds_next);
       }
     }
 

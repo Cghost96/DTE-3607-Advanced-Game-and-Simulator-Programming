@@ -385,16 +385,89 @@ namespace app {
   //      dte3607::coldet::mysolvers::/*step name*/::solve(scenario, time_step);
   //    };
 
-  //    registerScenario("[Scenario name]", ctr_fn, slv_fn);
+  //    registerScenario(/*Scenario name*/, ctr_fn, slv_fn);
   //  }
 
-  void GuiApplication::registerScenarioGaltonInitTest() {
-    auto ctr_fn = []() { return dte3607::coldet::utils::scenario_factories::constructGaltonInitTest(); };
+  void GuiApplication::registerScenarioGaltonVerticalFallFlatGround01() {
+    auto ctr_fn = []() {
+      return dte3607::coldet::utils::scenario_factories::constructGaltonVerticalFallFlatGround01();
+    };
     auto slv_fn = [](auto& scenario, auto const& time_step) {
       dte3607::coldet::mysolvers::rolling::solve(scenario, time_step);
     };
 
-    registerScenario("Galton - init test", ctr_fn, slv_fn);
+    registerScenario("G - vertical fall flat ground 01", ctr_fn, slv_fn);
+  }
+
+  void GuiApplication::registerScenarioGaltonRollSlopedGround01() {
+    auto ctr_fn
+      = []() { return dte3607::coldet::utils::scenario_factories::constructGaltonRollSlopedGround01(); };
+    auto slv_fn = [](auto& scenario, auto const& time_step) {
+      dte3607::coldet::mysolvers::rolling::solve(scenario, time_step);
+    };
+
+    registerScenario("G - roll sloped ground 01", ctr_fn, slv_fn);
+  }
+
+  void GuiApplication::registerScenarioGaltonRollSlopedGround02() {
+    auto ctr_fn
+      = []() { return dte3607::coldet::utils::scenario_factories::constructGaltonRollSlopedGround02(); };
+    auto slv_fn = [](auto& scenario, auto const& time_step) {
+      dte3607::coldet::mysolvers::rolling::solve(scenario, time_step);
+    };
+
+    registerScenario("G - roll sloped ground 02", ctr_fn, slv_fn);
+  }
+
+  void GuiApplication::registerScenarioGaltonRollSlopedGround03() {
+    auto ctr_fn
+      = []() { return dte3607::coldet::utils::scenario_factories::constructGaltonRollSlopedGround03(); };
+    auto slv_fn = [](auto& scenario, auto const& time_step) {
+      dte3607::coldet::mysolvers::rolling::solve(scenario, time_step);
+    };
+
+    registerScenario("G - roll sloped ground 03", ctr_fn, slv_fn);
+  }
+
+  void GuiApplication::registerScenarioGaltonRollSlopedGround04() {
+    auto ctr_fn
+      = []() { return dte3607::coldet::utils::scenario_factories::constructGaltonRollSlopedGround04(); };
+    auto slv_fn = [](auto& scenario, auto const& time_step) {
+      dte3607::coldet::mysolvers::rolling::solve(scenario, time_step);
+    };
+
+    registerScenario("G - roll sloped ground 04", ctr_fn, slv_fn);
+  }
+
+  void GuiApplication::registerScenarioGaltonRollSlopedGround05() {
+    auto ctr_fn
+      = []() { return dte3607::coldet::utils::scenario_factories::constructGaltonRollSlopedGround05(); };
+    auto slv_fn = [](auto& scenario, auto const& time_step) {
+      dte3607::coldet::mysolvers::rolling::solve(scenario, time_step);
+    };
+
+    registerScenario("G - funnel infinite", ctr_fn, slv_fn);
+  }
+
+  void GuiApplication::registerScenarioGaltonRollingCollisionFlatGround01() {
+    auto ctr_fn = []() {
+      return dte3607::coldet::utils::scenario_factories::constructGaltonRollingCollisionFlatGround01();
+    };
+    auto slv_fn = [](auto& scenario, auto const& time_step) {
+      dte3607::coldet::mysolvers::rolling::solve(scenario, time_step);
+    };
+
+    registerScenario("G - roll col flat ground 01", ctr_fn, slv_fn);
+  }
+
+  void GuiApplication::registerScenarioGaltonRollingCollisionAir01() {
+    auto ctr_fn
+      = []() { return dte3607::coldet::utils::scenario_factories::constructGaltonRollingCollisionAir01(); };
+    auto slv_fn = [](auto& scenario, auto const& time_step) {
+      dte3607::coldet::mysolvers::rolling::solve(scenario, time_step);
+    };
+
+    registerScenario("G - roll col air 01", ctr_fn, slv_fn);
   }
 
 }   // namespace app

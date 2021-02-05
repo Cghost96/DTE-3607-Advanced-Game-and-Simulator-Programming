@@ -20,19 +20,26 @@
 #include "../utils/state_computations.h"
 #include "../utils/energy_computations.h"
 
+#include <blaze/Math.h>
+
 // STL
 #include <memory>
 #include <set>
 #include <algorithm>
 
-// DEBUG RENDER TIME
-//#include <sstream>
+// DEBUG
+#include <sstream>
 //#include <ctime>
 
 namespace dte3607::coldet::mysolvers::rolling {
 
   using namespace std::chrono;
 
+  using TP             = types::HighResolutionTP;
+  using Clock          = types::HighResolutionClock;
+  using NS             = types::NanoSeconds;
+  using V3             = types::Vector3;
+  using VT             = types::ValueType;
   using States         = rigidbodies::Sphere::States;
   using Sphere         = rigidbodies::Sphere;
   using SpherePtr      = std::unique_ptr<Sphere>;
@@ -41,10 +48,7 @@ namespace dte3607::coldet::mysolvers::rolling {
   using FixedPlanePtr  = std::unique_ptr<FixedPlane>;
   using FixedPlanes    = std::vector<FixedPlanePtr>;
   using SFPAttachments = std::unordered_map<Sphere*, FixedPlane*>;
-  using TP             = types::HighResolutionTP;
-  using Clock          = types::HighResolutionClock;
-  using NS             = types::NanoSeconds;
-  using V3             = types::Vector3;
+  using Trajectories   = std::unordered_map<Sphere*, std::pair<V3, V3>>;
   struct CollisionOO {
     TP      tp;
     Sphere* o1;
@@ -60,14 +64,14 @@ namespace dte3607::coldet::mysolvers::rolling {
   using CollisionsOF = std::vector<CollisionOF>;
   using CollisionsOO = std::vector<CollisionOO>;
 
-  void detectInitialCollisions(Spheres const& O, FixedPlanes const& F, CollisionsOO& C_OO, CollisionsOF& C_OF,
-                               V3 const force, TP const& t_0, NS const& timestep) {
+  void detectInitialCollisions(Spheres const& O, FixedPlanes const& F, Trajectories const& trajectories,
+                               CollisionsOO& C_OO, CollisionsOF& C_OF, TP const& t_0, NS const& timestep) {
+    // TODO don't detect for spheres beyond a certain distance
     for (auto& o : O) {
+      // TODO don't have to detect for same spheres twice (o1 - o2 and later o2 - o1)
       for (auto& o2 : O) {
         if (o.get() == o2.get()) continue;
-        auto const collision = mechanics::detectCollisionSphereSphere(
-          o->timepoint(), o->point(), o->radius(), o->velocity(), o2->timepoint(), o2->point(), o2->radius(),
-          o2->velocity(), force, t_0, timestep);
+        auto const collision = mechanics::detectCollisionSphereSphere(o.get(), o2.get(), trajectories);
         if (collision) {
           auto const  c_dt = std::chrono::duration_cast<NS>(collision.value() * timestep);
           auto const  c_tp = t_0 + c_dt;
@@ -77,9 +81,7 @@ namespace dte3607::coldet::mysolvers::rolling {
       }
 
       for (auto& f : F) {
-        auto const collision
-          = mechanics::detectCollisionSphereFixedPlane(o->timepoint(), o->point(), o->radius(), o->velocity(),
-                                                       f->point(), f->normal(), force, t_0, timestep);
+        auto const collision = mechanics::detectCollisionSphereFixedPlane(o.get(), f.get(), trajectories);
         if (collision) {
           auto const  c_dt = std::chrono::duration_cast<NS>(collision.value() * timestep);
           auto const  c_tp = t_0 + c_dt;
@@ -90,11 +92,9 @@ namespace dte3607::coldet::mysolvers::rolling {
     }
   }
 
-  void detectNewCollisionsOO(Sphere* o1, Sphere* o2, CollisionsOO& C_OO, V3 const force, TP const& t_0,
-                             NS const& timestep) {
-    auto const collision = mechanics::detectCollisionSphereSphere(
-      o1->timepoint(), o1->point(), o1->radius(), o1->velocity(), o2->timepoint(), o2->point(), o2->radius(),
-      o2->velocity(), force, t_0, timestep);
+  void detectNewCollisions(Sphere* o1, Sphere* o2, Trajectories const& trajectories, CollisionsOO& C_OO,
+                           TP const& t_0, NS const& timestep) {
+    auto const collision = mechanics::detectCollisionSphereSphere(o1, o2, trajectories);
     if (collision) {
       auto const c_dt      = collision.value() * (timestep - (o1->timepoint() - t_0));
       auto const c_dt_cast = std::chrono::duration_cast<NS>(c_dt);
@@ -108,10 +108,9 @@ namespace dte3607::coldet::mysolvers::rolling {
     }
   }
 
-  void detectNewCollisionsOF(Sphere* o, FixedPlane* const& f, CollisionsOF& C_OF, V3 const force,
-                             TP const& t_0, NS const& timestep) {
-    auto const collision = mechanics::detectCollisionSphereFixedPlane(
-      o->timepoint(), o->point(), o->radius(), o->velocity(), f->point(), f->normal(), force, t_0, timestep);
+  void detectNewCollisions(Sphere* o, FixedPlane* const& f, Trajectories const& trajectories,
+                           CollisionsOF& C_OF, TP const& t_0, NS const& timestep) {
+    auto const collision = mechanics::detectCollisionSphereFixedPlane(o, f, trajectories);
     if (collision) {
       auto const  c_dt      = collision.value() * (timestep - (o->timepoint() - t_0));
       auto const  c_dt_cast = std::chrono::duration_cast<NS>(c_dt);
@@ -121,97 +120,164 @@ namespace dte3607::coldet::mysolvers::rolling {
     }
   }
 
-  void simulate(Sphere* o, SFPAttachments const& attachments, NS const dt, V3 const force) {
-    auto [ds, a] = mechanics::computeLinearTrajectory(o, attachments, force, dt);
-    o->spaceObjectFrame().translateParent(ds);
-    o->addAcceleration(a);
-    utils::energy::dampening::addTimeDependentLoss(o, attachments, dt);
+  void setRotationNormal(Sphere* o, V3 const n) { o->setRotationNormal(blaze::normalize(n)); }
+
+  V3 getRotationAxis(Sphere* o) {
+    V3 const n      = o->rotationNormal();
+    V3 const w_axis = -(blaze::evaluate(o->radius() * blaze::evaluate(blaze::cross(o->velocity(), n))));
+    return w_axis;
   }
 
-  void responseOO(CollisionOO& c, SFPAttachments& attachments, V3 const force, NS const& timestep,
-                  TP const& t_0) {
-    auto const dt_next = timestep - (c.tp - t_0);
-    auto const µ1      = c.o1->frictionCoef();
-    auto const µ2      = c.o2->frictionCoef();
-    auto [v1_adj, v1_orig, v2_adj, v2_orig]
-      = mechanics::computeImpactResponseSphereSphereWithStates(c.o1, c.o2, attachments, µ1, µ2);
+  void setRotationSpeed(Sphere* o) {
+    V3 const w_axis  = getRotationAxis(o);
+    VT const w_speed = blaze::evaluate(blaze::length(w_axis)) * (std::numbers::pi / 180.);
+    o->setRotationSpeed(w_speed);
+  }
 
-    auto handle_response = [force, &attachments, &dt_next](Sphere* o, V3 v_adj, V3 v_orig) -> void {
-      if (o->state() != States::Free) {
-        auto [ds_next, a_next] = mechanics::computeLinearTrajectory(v_orig, force, dt_next);
-        utils::state::detectStateChangeOF(o, attachments.at(o), attachments, ds_next);
-        o->setVelocity((o->state() == States::Free) ? v_orig : v_adj);
+  void simulate(Sphere* o, SFPAttachments const& attachments, Trajectories const& trajectories,
+                NS const simulation_dt, NS const& full_timestep, TP const& t_0) {
+    if (o->state() != States::Resting) {
+      auto const remaining_dt = utils::toDt((t_0 + full_timestep) - o->timepoint());
+      if (remaining_dt > 0.) {
+        auto const scaling        = utils::toDt(simulation_dt) / remaining_dt;
+        auto       ds             = trajectories.at(o).first * scaling;
+        auto       a              = trajectories.at(o).second * scaling;
+        auto const rotSpeedScaled = o->rotationSpeed() * utils::toDt(simulation_dt);
+        o->spaceObjectFrame().rotateParent(rotSpeedScaled, getRotationAxis(o));
+        o->spaceObjectFrame().translateParent(ds);
+        if (o->state() != States::Rolling) o->addAcceleration(a);
+        utils::energy::dampening::addTimeDependentLoss(o, attachments, simulation_dt);
+        if (o->state() != States::Free) setRotationSpeed(o);
       }
-      else
-        o->setVelocity(v_orig);
-    };
-
-    handle_response(c.o1, v1_adj, v1_orig);
-    handle_response(c.o2, v2_adj, v2_orig);
-  }
-
-  void responseOF(CollisionOF& c, SFPAttachments& attachments, V3 const force, NS const& timestep,
-                  TP const& t_0) {
-    auto const   dt_next    = timestep - (c.tp - t_0);
-    auto const   plane      = c.o->state() == States::Free ? c.f : attachments.at(c.o);
-    auto const   response   = mechanics::computeImpactResponseSphereFixedPlane(c.o, c.f);
-    States const prev_state = c.o->state();
-    auto [ds_next, a_next]  = mechanics::computeLinearTrajectory(response, force, dt_next);
-    utils::state::detectStateChangeOF(c.o, plane, attachments, ds_next);
-    c.o->setVelocity(c.o->state() != prev_state ? mechanics::computeImpactResponseSphereFixedPlane(c.o, c.f)
-                                                : response);
+    }
   }
 
   void cache(Sphere* o, TP const new_tp) { o->timepoint() = new_tp; }
 
-  void searchForNewCollisionsOO(CollisionOO& c, Spheres const& O, FixedPlanes const& F, CollisionsOO& C_OO,
-                                CollisionsOF C_OF, V3 const force, TP const& t_0, NS const& timestep) {
+  void cache(Sphere* o, V3 const ds, V3 const a, Trajectories& trajectories) {
+    trajectories[o] = std::make_pair(ds, a);
+  }
+
+  void response(CollisionOO& c, SFPAttachments& attachments, Trajectories& trajectories, V3 const force,
+                NS const& timestep, TP const& t_0) {
+    auto const dt_next            = timestep - (c.tp - t_0);
+    auto const µ1                 = c.o1->frictionCoef();
+    auto const µ2                 = c.o2->frictionCoef();
+    V3 const   collision_normal_1 = c.o1->point() - c.o2->point();
+    V3 const   collision_normal_2 = c.o2->point() - c.o1->point();
+    auto [v1_adj, v1_orig, v2_adj, v2_orig]
+      = mechanics::computeImpactResponseSphereSphereWithStates(c.o1, c.o2, attachments, µ1, µ2);
+
+    auto handle_response = [force, &attachments, &dt_next, &trajectories](Sphere* o, V3 const v_adj,
+                                                                          V3 const v_orig, V3 col_n) -> void {
+      auto [ds_next_free, a_next_free] = mechanics::computeLinearTrajectory(v_orig, force, dt_next);
+      if (o->state() == States::Free) {
+        o->setVelocity(v_orig);
+        setRotationNormal(o, col_n);
+        setRotationSpeed(o);
+        cache(o, ds_next_free, a_next_free, trajectories);
+      }
+      else {
+        utils::state::detectStateChange(o, attachments.at(o), attachments, ds_next_free);
+        if (o->state() == States::Free) {
+          o->setVelocity(v_orig);
+          setRotationNormal(o, col_n);
+          setRotationSpeed(o);
+          cache(o, ds_next_free, a_next_free, trajectories);
+        }
+        else if (o->state() == States::Sliding || o->state() == States::Rolling) {
+          o->setVelocity(v_adj);
+          setRotationNormal(o, attachments.at(o)->normal());
+          setRotationSpeed(o);
+          utils::state::detectStateChange(o, attachments.at(o), attachments, ds_next_free);
+          auto [ds_next_adj, a_next_adj] = mechanics::computeLinearTrajectory(o, attachments, force, dt_next);
+          cache(o, ds_next_adj, a_next_adj, trajectories);
+        }
+      }
+    };
+
+    handle_response(c.o1, v1_adj, v1_orig, collision_normal_1);
+    handle_response(c.o2, v2_adj, v2_orig, collision_normal_2);
+  }
+
+  void response(CollisionOF& c, SFPAttachments& attachments, Trajectories& trajectories, V3 const force,
+                NS const& timestep, TP const& t_0) {
+    auto const dt_next = timestep - (c.tp - t_0);
+
+    auto const v_init_response       = mechanics::computeImpactResponseSphereFixedPlane(c.o, c.f);
+    auto [ds_next_free, a_next_free] = mechanics::computeLinearTrajectory(v_init_response, force, dt_next);
+
+    auto const   plane      = c.o->state() == States::Free ? c.f : attachments.at(c.o);
+    States const prev_state = c.o->state();
+    utils::state::detectStateChange(c.o, plane, attachments, ds_next_free);
+
+    c.o->setVelocity(c.o->state() != prev_state ? mechanics::computeImpactResponseSphereFixedPlane(c.o, c.f)
+                                                : v_init_response);
+    setRotationNormal(c.o, plane->normal());
+    setRotationSpeed(c.o);
+    utils::state::detectStateChange(c.o, plane, attachments, ds_next_free);
+
+    if (c.o->state() == States::Free)
+      cache(c.o, ds_next_free, a_next_free, trajectories);
+    else if (c.o->state() == States::Sliding || c.o->state() == States::Rolling) {
+      auto [ds_next_adj, a_next_adj] = mechanics::computeLinearTrajectory(c.o, attachments, force, dt_next);
+      cache(c.o, ds_next_adj, a_next_adj, trajectories);
+    }
+  }
+
+  // TODO don't detect for spheres beyond a certain distance
+  void searchForNewCollisions(CollisionOO& c, Spheres const& O, FixedPlanes const& F,
+                              Trajectories const& trajectories, CollisionsOO& C_OO, CollisionsOF C_OF,
+                              TP const& t_0, NS const& timestep) {
     for (auto& o_other : O) {
-      if (c.o1 != o_other.get()) detectNewCollisionsOO(c.o1, o_other.get(), C_OO, force, t_0, timestep);
-      if (c.o2 != o_other.get()) detectNewCollisionsOO(c.o2, o_other.get(), C_OO, force, t_0, timestep);
+      if (c.o1 != o_other.get()) detectNewCollisions(c.o1, o_other.get(), trajectories, C_OO, t_0, timestep);
+      if (c.o2 != o_other.get()) detectNewCollisions(c.o2, o_other.get(), trajectories, C_OO, t_0, timestep);
     }
     for (auto& f : F) {
-      detectNewCollisionsOF(c.o1, f.get(), C_OF, force, t_0, timestep);
-      detectNewCollisionsOF(c.o2, f.get(), C_OF, force, t_0, timestep);
+      detectNewCollisions(c.o1, f.get(), trajectories, C_OF, t_0, timestep);
+      detectNewCollisions(c.o2, f.get(), trajectories, C_OF, t_0, timestep);
     }
   }
 
-  void searchForNewCollisionsOF(CollisionOF& c, Spheres const& O, FixedPlanes const& F, CollisionsOF& C_OF,
-                                CollisionsOO& C_OO, V3 const force, TP const& t_0, NS const& timestep) {
+  void searchForNewCollisions(CollisionOF& c, Spheres const& O, FixedPlanes const& F,
+                              Trajectories const& trajectories, CollisionsOF& C_OF, CollisionsOO& C_OO,
+                              TP const& t_0, NS const& timestep) {
     for (auto& o_other : O)
-      if (c.o != o_other.get()) detectNewCollisionsOO(c.o, o_other.get(), C_OO, force, t_0, timestep);
+      if (c.o != o_other.get()) detectNewCollisions(c.o, o_other.get(), trajectories, C_OO, t_0, timestep);
     for (auto& f : F)
-      if (c.f != f.get()) detectNewCollisionsOF(c.o, f.get(), C_OF, force, t_0, timestep);
+      if (c.f != f.get()) detectNewCollisions(c.o, f.get(), trajectories, C_OF, t_0, timestep);
   }
 
-  void handleCollisionOO(CollisionsOO& C_OO, CollisionsOF& C_OF, SFPAttachments& attachments, V3 const force,
-                         NS const& timestep, TP const& t_0, Spheres const& O, FixedPlanes const& F) {
+  void handleCollision(CollisionsOO& C_OO, CollisionsOF& C_OF, SFPAttachments& attachments,
+                       Trajectories& trajectories, V3 const force, NS const& timestep, TP const& t_0,
+                       Spheres const& O, FixedPlanes const& F) {
     CollisionOO c = C_OO.back();
     C_OO.pop_back();
     if (not C_OF.empty()) C_OF.pop_back();
     auto const dt1 = c.tp - c.o1->timepoint();
     auto const dt2 = c.tp - c.o2->timepoint();
-    simulate(c.o1, attachments, dt1, force);
-    simulate(c.o2, attachments, dt2, force);
-    responseOO(c, attachments, force, timestep, t_0);
+    simulate(c.o1, attachments, trajectories, dt1, timestep, t_0);
+    simulate(c.o2, attachments, trajectories, dt2, timestep, t_0);
+    response(c, attachments, trajectories, force, timestep, t_0);
     cache(c.o1, c.tp);
     cache(c.o2, c.tp);
-    searchForNewCollisionsOO(c, O, F, C_OO, C_OF, force, t_0, timestep);
+    searchForNewCollisions(c, O, F, trajectories, C_OO, C_OF, t_0, timestep);
   }
 
-  void handleCollisionOF(CollisionsOF& C_OF, CollisionsOO& C_OO, SFPAttachments& attachments, V3 const force,
-                         NS const& timestep, TP const& t_0, Spheres const& O, FixedPlanes const& F) {
+  void handleCollision(CollisionsOF& C_OF, CollisionsOO& C_OO, SFPAttachments& attachments,
+                       Trajectories& trajectories, V3 const force, NS const& timestep, TP const& t_0,
+                       Spheres const& O, FixedPlanes const& F) {
     CollisionOF c = C_OF.back();
     C_OF.pop_back();
     if (not C_OO.empty()) C_OO.pop_back();
     auto const dt = c.tp - c.o->timepoint();
-    simulate(c.o, attachments, dt, force);
-    responseOF(c, attachments, force, timestep, t_0);
+    simulate(c.o, attachments, trajectories, dt, timestep, t_0);
+    response(c, attachments, trajectories, force, timestep, t_0);
     cache(c.o, c.tp);
-    searchForNewCollisionsOF(c, O, F, C_OF, C_OO, force, t_0, timestep);
+    searchForNewCollisions(c, O, F, trajectories, C_OF, C_OO, t_0, timestep);
   }
 
-  // TODO use something else than ".contains" and "insert"? / unordered_set?
+  // TODO use something else than ".contains" and "insert"? / unordered_set / unordered_map?
   void sortAndMakeUnique(CollisionsOF& C_OF, CollisionsOO& C_OO) {
     std::sort(C_OF.begin(), C_OF.end(),
               [](CollisionOF c_of1, CollisionOF c_of2) -> bool { return c_of1.tp < c_of2.tp; });
@@ -252,32 +318,38 @@ namespace dte3607::coldet::mysolvers::rolling {
      auto t1 =
      std::chrono::duration_cast<std::chrono::NS>(timeDuration1);*/
 
-    TP const           t_0         = Clock::now();
-    CollisionsOF       C_OF        = {};
-    CollisionsOO       C_OO        = {};
-    FixedPlanes const& F           = scenario.fixedPlanes();
-    Spheres const&     O           = scenario.spheres();
-    SFPAttachments&    attachments = scenario.sfpAttachments();
-    V3 const&          G           = scenario.forces().G;
+    TP const           t_0          = Clock::now();
+    CollisionsOF       C_OF         = {};
+    CollisionsOO       C_OO         = {};
+    FixedPlanes const& F            = scenario.fixedPlanes();
+    Spheres const&     O            = scenario.spheres();
+    SFPAttachments&    attachments  = scenario.sfpAttachments();
+    Trajectories&      trajectories = scenario.trajectories();
+    V3 const&          G            = scenario.forces().G;
 
-    for (auto& o : O)
-      o->timepoint() = t_0;
+    for (auto& o : O) {
+      cache(o.get(), t_0);
+      if (!trajectories.contains(o.get())) {
+        auto [ds_next, a_next] = mechanics::computeLinearTrajectory(o->velocity(), G, timestep);
+        cache(o.get(), ds_next, a_next, trajectories);
+      }
+    }
 
-    detectInitialCollisions(O, F, C_OO, C_OF, G, t_0, timestep);
+    detectInitialCollisions(O, F, trajectories, C_OO, C_OF, t_0, timestep);
 
     sortAndMakeUnique(C_OF, C_OO);
 
     while (not C_OF.empty() || not C_OO.empty()) {
       if (not C_OF.empty() && not C_OO.empty()) {
         if (C_OF.back().tp < C_OO.back().tp)
-          handleCollisionOF(C_OF, C_OO, attachments, G, timestep, t_0, O, F);
+          handleCollision(C_OF, C_OO, attachments, trajectories, G, timestep, t_0, O, F);
         else
-          handleCollisionOO(C_OO, C_OF, attachments, G, timestep, t_0, O, F);
+          handleCollision(C_OO, C_OF, attachments, trajectories, G, timestep, t_0, O, F);
       }
       else if (not C_OF.empty())
-        handleCollisionOF(C_OF, C_OO, attachments, G, timestep, t_0, O, F);
+        handleCollision(C_OF, C_OO, attachments, trajectories, G, timestep, t_0, O, F);
       else
-        handleCollisionOO(C_OO, C_OF, attachments, G, timestep, t_0, O, F);
+        handleCollision(C_OO, C_OF, attachments, trajectories, G, timestep, t_0, O, F);
 
       sortAndMakeUnique(C_OF, C_OO);
     }
@@ -285,12 +357,22 @@ namespace dte3607::coldet::mysolvers::rolling {
     // Remaining dt
     for (auto& o : O) {
       auto const dt = timestep - (o->timepoint() - t_0);
-      simulate(o.get(), attachments, dt, G);
+      simulate(o.get(), attachments, trajectories, dt, timestep, t_0);
+      auto [ds_next_free, a_next_free] = mechanics::computeLinearTrajectory(o->velocity(), G, timestep);
 
-      if (o->state() == States::Sliding) {
-        auto [ds_next, a_next] = mechanics::computeLinearTrajectory(o->velocity(), G, timestep);
-        auto const plane       = attachments.at(o.get());
-        utils::state::detectStateChangeOF(o.get(), plane, attachments, ds_next);
+      if (o->state() == States::Free)
+        cache(o.get(), ds_next_free, a_next_free, trajectories);
+      else if (o->state() == States::Sliding || o->state() == States::Rolling) {
+        auto const plane = attachments.at(o.get());
+        utils::state::detectStateChange(o.get(), plane, attachments, ds_next_free);
+
+        if (o->state() == States::Sliding || o->state() == States::Rolling) {
+          auto [ds_next_adj, a_next_adj]
+            = mechanics::computeLinearTrajectory(o.get(), attachments, G, timestep);
+          cache(o.get(), ds_next_adj, a_next_adj, trajectories);
+        }
+        else if (o->state() == States::Free)
+          cache(o.get(), ds_next_free, a_next_free, trajectories);
       }
     }
 
@@ -304,4 +386,4 @@ namespace dte3607::coldet::mysolvers::rolling {
   }
 }   // namespace dte3607::coldet::mysolvers::rolling
 
-#endif // ROLLING_H
+#endif   // ROLLING_H

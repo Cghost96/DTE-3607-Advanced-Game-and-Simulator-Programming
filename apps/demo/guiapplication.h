@@ -83,7 +83,14 @@ namespace app {
     /* --------------------------------------------------------------------------------- */
     /* ------------------------------- PROJECT SCENARIOS ------------------------------- */
     /* --------------------------------------------------------------------------------- */
-    void registerScenarioGaltonInitTest();
+    void registerScenarioGaltonVerticalFallFlatGround01();
+    void registerScenarioGaltonRollSlopedGround01();
+    void registerScenarioGaltonRollSlopedGround02();
+    void registerScenarioGaltonRollSlopedGround03();
+    void registerScenarioGaltonRollSlopedGround04();
+    void registerScenarioGaltonRollSlopedGround05();
+    void registerScenarioGaltonRollingCollisionFlatGround01();
+    void registerScenarioGaltonRollingCollisionAir01();
 
   private:
     QQmlApplicationEngine m_engine;
