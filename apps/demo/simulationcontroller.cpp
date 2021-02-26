@@ -1,17 +1,13 @@
 #include "simulationcontroller.h"
 
-namespace app
-{
+namespace app {
 
-  SimulationController::~SimulationController()
-  {
+  SimulationController::~SimulationController() {
     simulation_loop_thread.quit();
     simulation_loop_thread.wait();
   }
 
-  void SimulationController::resetScenario(
-    std::weak_ptr<ScenarioWrapperBase> scenario_wptr)
-  {
+  void SimulationController::resetScenario(std::weak_ptr<ScenarioWrapperBase> scenario_wptr) {
     clearScenario();
 
     auto scenario = scenario_wptr.lock();
@@ -19,16 +15,15 @@ namespace app
 
     // Construct worker and move to thread
     auto* sim_loop_worker = new SimulationLoopWorker(scenario, 16ms);
-    connect(&simulation_loop_thread, &QThread::finished, sim_loop_worker,
-            &QObject::deleteLater);
-    connect(sim_loop_worker, &SimulationLoopWorker::simulationFrameTimingsReady,
-            this, &SimulationController::relayReadySimulationFrameTimings);
+    connect(&simulation_loop_thread, &QThread::finished, sim_loop_worker, &QObject::deleteLater);
+    connect(sim_loop_worker, &SimulationLoopWorker::simulationFrameTimingsReady, this,
+            &SimulationController::relayReadySimulationFrameTimings);
     connect(sim_loop_worker, &SimulationLoopWorker::initialized, this,
             &SimulationController::simulationStateReady);
-    connect(&simulation_loop_timer, &QTimer::timeout, sim_loop_worker,
-            &SimulationLoopWorker::simulate);
+    connect(&simulation_loop_timer, &QTimer::timeout, sim_loop_worker, &SimulationLoopWorker::simulate);
     connect(&simulation_model_update_timer, &QTimer::timeout, this,
             &SimulationController::simulationStateReady);
+
 
     sim_loop_worker->moveToThread(&simulation_loop_thread);
     simulation_loop_thread.start();
@@ -38,8 +33,7 @@ namespace app
     emit initSimLoopWorker();
   }
 
-  void SimulationController::clearScenario()
-  {
+  void SimulationController::clearScenario() {
 
     //      qDebug() << "Clearing old scenario";
     stopSimulationTimer();
@@ -47,24 +41,21 @@ namespace app
     simulation_loop_thread.wait();
   }
 
-  void SimulationController::startSimulationTimer()
-  {
+  void SimulationController::startSimulationTimer() {
     if (simulation_loop_timer.isActive()) return;
 
     simulation_loop_timer.start(16);
     simulation_model_update_timer.start(16);
   }
 
-  void SimulationController::stopSimulationTimer()
-  {
+  void SimulationController::stopSimulationTimer() {
     if (not simulation_loop_timer.isActive()) return;
 
     simulation_model_update_timer.stop();
     simulation_loop_timer.stop();
   }
 
-  void SimulationController::startStopSimulationTimer()
-  {
+  void SimulationController::startStopSimulationTimer() {
     if (simulation_loop_timer.isActive())
       stopSimulationTimer();
     else

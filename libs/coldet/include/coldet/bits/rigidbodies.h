@@ -98,6 +98,20 @@ namespace dte3607::coldet::rigidbodies {
     ValueType m_radius{1.0};
   };
 
+  //  template <std::floating_point ValueType_T = double>
+  struct FixedSphere : RigidBody {
+    FixedSphere(types::Vector3::ElementType const& radius, std::string name = {})
+      : RigidBody(name), m_radius{radius} {}
+
+    // Sphere prop. access
+    Point3    point() const { return spaceObjectFrame().frameOriginParent(); }
+    ValueType radius() const { return m_radius; }
+
+    // Concept requirements END
+
+  private:
+    ValueType m_radius{1.0};
+  };
 
   struct FixedPlane : RigidBody {
     FixedPlane(types::Vector3 const& n, std::string name = {}) : RigidBody(name), m_n{n} {}

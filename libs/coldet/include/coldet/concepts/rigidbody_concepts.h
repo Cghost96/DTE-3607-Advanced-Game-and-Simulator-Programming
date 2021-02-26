@@ -101,6 +101,14 @@ namespace dte3607::coldet::concepts
       { obj.radius() } -> std::convertible_to<typename Sphere_T::ValueType>;
     };
 
+    template <typename FixedCylinder_T>
+    concept IsCylinder = requires(FixedCylinder_T& obj)
+    {
+        { obj.vector() } -> std::convertible_to<typename FixedCylinder_T::Vector3>;
+        { obj.radius() } -> std::convertible_to<typename FixedCylinder_T::ValueType>;
+        { obj.origin() } -> std::convertible_to<typename FixedCylinder_T::Point3>;
+    };
+
     template <typename FixedLimitedPlane_T>
     concept IsLimitedPlane = requires(FixedLimitedPlane_T obj, typename FixedLimitedPlane_T::ValueType u)
     {

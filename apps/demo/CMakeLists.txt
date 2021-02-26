@@ -16,6 +16,7 @@ set(${PROJECT_NAME}_SOURCES
   simulationcontroller.cpp
   simulationloopworker.cpp
   limitedplanegeometry.cpp
+  galtondatageneration.cpp
   )
 
 ### Qt MOC HEADERS

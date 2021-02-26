@@ -8,14 +8,14 @@
 
 namespace dte3607::coldet::mechanics {
 
-  using States         = rigidbodies::Sphere::States;
-  using Sphere         = rigidbodies::Sphere;
-  using FixedPlane     = rigidbodies::FixedPlane;
-  using SFPAttachments = std::unordered_map<Sphere*, FixedPlane*>;
-  using P3             = types::Point3;
-  using V3             = types::Vector3;
-  using VT             = types::ValueType;
-  using NS             = types::NanoSeconds;
+  using States          = rigidbodies::Sphere::States;
+  using Sphere          = rigidbodies::Sphere;
+  using FixedPlane      = rigidbodies::FixedPlane;
+  using OsFpAttachments = std::unordered_map<Sphere*, FixedPlane*>;
+  using P3              = types::Point3;
+  using V3              = types::Vector3;
+  using VT              = types::ValueType;
+  using NS              = types::NanoSeconds;
 
   V3 getParallelDs(const V3 ds, const V3 n);
   V3 getParallelAcceleration(V3 const a, V3 const n);
@@ -38,11 +38,11 @@ namespace dte3607::coldet::mechanics {
     return std::make_pair(ds, a * dt);
   }
 
-  inline std::pair<V3, V3> computeLinearTrajectory(Sphere* o, SFPAttachments const& attachments, V3 force,
+  inline std::pair<V3, V3> computeLinearTrajectory(Sphere* s, OsFpAttachments const& attachments, V3 force,
                                                    NS dt) {
-    auto const plane = attachments.at(o);
+    auto const plane = attachments.at(s);
     auto const n     = plane->normal();
-    auto const µ1    = o->frictionCoef();
+    auto const µ1    = s->frictionCoef();
     auto const µ2    = plane->frictionCoef();
 
     auto adjustedTrajectory = [&n](V3 ds, V3 a) -> std::pair<V3, V3> {
@@ -51,22 +51,22 @@ namespace dte3607::coldet::mechanics {
       return std::make_pair(ds_adj, a_adj);
     };
 
-    if (o->state() == States::Sliding) {
+    if (s->state() == States::Sliding) {
       force        = utils::energy::force::computeSlidingForce(force, µ1, µ2);
-      auto [ds, a] = computeLinearTrajectory(o->velocity(), force, dt);
+      auto [ds, a] = computeLinearTrajectory(s->velocity(), force, dt);
       return adjustedTrajectory(ds, a);
     }
-    else if (o->state() == States::Rolling) {
+    else if (s->state() == States::Rolling) {
       force
-        = utils::energy::force::computeRollingForce(o->mass(), o->radius(), force, µ1, µ2, o->velocity(), n);
-      auto a = utils::energy::motion::getTotalRollingAcceleration(force, o->mass(), µ1, µ2, o->radius(),
-                                                                  o->velocity(), n);
-      return computeRollingLinTraj(o->velocity(), a, dt);
+        = utils::energy::force::computeRollingForce(s->mass(), s->radius(), force, µ1, µ2, s->velocity(), n);
+      auto a = utils::energy::motion::getTotalRollingAcceleration(force, s->mass(), µ1, µ2, s->radius(),
+                                                                  s->velocity(), n);
+      return computeRollingLinTraj(s->velocity(), a, dt);
     }
   }
 
   // Helpers
-  V3 getParallelAcceleration(V3 const a, V3 const n) {
+  inline V3 getParallelAcceleration(V3 const a, V3 const n) {
     auto const inner_n_a = blaze::evaluate(blaze::inner(blaze::normalize(n), a));
 
     if (inner_n_a == 0)
@@ -77,7 +77,7 @@ namespace dte3607::coldet::mechanics {
     }
   }
 
-  V3 getParallelDs(V3 const ds, V3 const n) {
+  inline V3 getParallelDs(V3 const ds, V3 const n) {
     auto const ortho       = blaze::cross(ds, n);
     auto const ds_prime    = blaze::cross(n, ortho);
     auto const ds_parallel = blaze::normalize(ds_prime) * blaze::inner(ds, ds_prime);

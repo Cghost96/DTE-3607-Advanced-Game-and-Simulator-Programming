@@ -16,22 +16,17 @@
 
 
 
-namespace app
-{
+namespace app {
 
 
   class ScenarioModel : public QAbstractListModel {
     Q_OBJECT
 
-    Q_PROPERTY(
-      int simLoopTimestep READ simLoopTimestep NOTIFY simLoopTimestepChanged)
-    Q_PROPERTY(
-      int simLoopSimtime READ simLoopSimtime NOTIFY simLoopSimtimeChanged)
+    Q_PROPERTY(int simLoopTimestep READ simLoopTimestep NOTIFY simLoopTimestepChanged)
+    Q_PROPERTY(int simLoopSimtime READ simLoopSimtime NOTIFY simLoopSimtimeChanged)
 
-    Q_PROPERTY(int simLoopTimestepAverage READ simLoopTimestepAverage NOTIFY
-                 simLoopTimestepAverageChanged)
-    Q_PROPERTY(int simLoopSimtimeAverage READ simLoopSimtimeAverage NOTIFY
-                 simLoopSimtimeAverageChanged)
+    Q_PROPERTY(int simLoopTimestepAverage READ simLoopTimestepAverage NOTIFY simLoopTimestepAverageChanged)
+    Q_PROPERTY(int simLoopSimtimeAverage READ simLoopSimtimeAverage NOTIFY simLoopSimtimeAverageChanged)
 
     Q_PROPERTY(int noObjects READ noObjects NOTIFY noObjectsChanged)
 
@@ -50,7 +45,8 @@ namespace app
       FrameOrigin,
       Velocity,
       EulerRotation,
-      Radius
+      Radius,
+      FixedSphere
     };
 
     void resetScenario(std::weak_ptr<ScenarioWrapperBase> scenario);
@@ -68,17 +64,12 @@ namespace app
 
     // mandatory
     int      rowCount(const QModelIndex& index) const override;
-    QVariant data(const QModelIndex& index,
-                  int                role = Qt::DisplayRole) const override;
+    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
 
-    QVariant sphereData(const QModelIndex& index,
-                        int                role = Qt::DisplayRole) const;
-    QVariant planeData(const QModelIndex& index,
-                       int                role = Qt::DisplayRole) const;
-    QVariant limitedPlaneData(const QModelIndex& index,
-                              int                role = Qt::DisplayRole) const;
-    QVariant bezierSurfaceData(const QModelIndex& index,
-                               int                role = Qt::DisplayRole) const;
+    QVariant sphereData(const QModelIndex& index, int role = Qt::DisplayRole) const;
+    QVariant planeData(const QModelIndex& index, int role = Qt::DisplayRole) const;
+    QVariant limitedPlaneData(const QModelIndex& index, int role = Qt::DisplayRole) const;
+    QVariant bezierSurfaceData(const QModelIndex& index, int role = Qt::DisplayRole) const;
 
     // optional
     QHash<int, QByteArray> roleNames() const override;
@@ -99,15 +90,13 @@ namespace app
       int m_no{0};
 
     public:
-      void add(int rhs)
-      {
+      void add(int rhs) {
         m_curr = rhs;
         m_total += m_curr;
         ++m_no;
       }
 
-      int avg() const
-      {
+      int avg() const {
         if (m_no == 0) return 0;
 
         return m_total / m_no;

@@ -5,8 +5,6 @@
 #include "../bits/types.h"
 #include "../bits/rigidbodies.h"
 
-#include <sstream>
-
 namespace dte3607::coldet::utils::state {
 
   using States                = rigidbodies::Sphere::States;
@@ -15,13 +13,13 @@ namespace dte3607::coldet::utils::state {
   using P3                    = types::Point3;
   using Sphere                = rigidbodies::Sphere;
   using FixedPlane            = rigidbodies::FixedPlane;
-  using SFPAttachments        = std::unordered_map<Sphere*, FixedPlane*>;
+  using OsFpAttachments       = std::unordered_map<Sphere*, FixedPlane*>;
   auto const epsilon          = 1e-6;
   auto const restingTolerance = 300000 * epsilon;
   auto const rollingTolerance = 1000 * epsilon;
   auto const freeTolerance    = 1000 * epsilon;
 
-  V3 getRotationAxis(Sphere* o);
+  V3 getRotationAxis(Sphere* s);
 
   namespace Free {
     bool canGoToRestingState(V3 n, V3 ds);
@@ -112,92 +110,96 @@ namespace dte3607::coldet::utils::state {
 
   }   // namespace Rolling
 
-  inline void detectStateChange(Sphere* o, FixedPlane* f, SFPAttachments& attachments, V3& ds) {
-    switch (o->state()) {
+  inline void detectStateChange(Sphere* s, FixedPlane* p, OsFpAttachments& attachmentsOsFp, V3& ds) {
+    auto const v = s->velocity();
+    auto const n = p->normal();
+    switch (s->state()) {
       case States::Free: {
-        bool const slidingState
-          = Free::canGoToSlidingState(f->normal(), ds, o->velocity(), getRotationAxis(o));
-        bool const rollingState
-          = Free::canGoToRollingState(f->normal(), ds, o->velocity(), getRotationAxis(o));
-        bool const restingState = Free::canGoToRestingState(f->normal(), ds);
+        bool const slidingState = Free::canGoToSlidingState(p->normal(), ds, v, getRotationAxis(s));
+        bool const rollingState = Free::canGoToRollingState(p->normal(), ds, v, getRotationAxis(s));
+        bool const restingState = Free::canGoToRestingState(p->normal(), ds);
         if (restingState) {
-          o->setState(States::Resting);
-          std::cout << o->m_name << " set to Resting" << std::endl;
-          attachments[o] = f;
+          s->setState(States::Resting);
+          //          std::cout << s->m_name << " set to Resting" << std::endl;
+          //          std::cout << "x: " << s->point()[0] << " z: " << s->point()[2] << std::endl;
+          attachmentsOsFp[s] = p;
         }
         else if (rollingState) {
-          o->setState(States::Rolling);
-          std::cout << o->m_name << " set to Rolling" << std::endl;
-          attachments[o] = f;
+          s->setState(States::Rolling);
+          //          std::cout << s->m_name << " set to Rolling" << std::endl;
+          attachmentsOsFp[s] = p;
         }
         else if (slidingState) {
-          o->setState(States::Sliding);
-          std::cout << o->m_name << " set to Sliding" << std::endl;
-          attachments[o] = f;
+          s->setState(States::Sliding);
+          //          std::cout << s->m_name << " set to Sliding" << std::endl;
+          attachmentsOsFp[s] = p;
         }
       } break;
       case States::Resting: {
-        bool const freeState    = Resting::canGoToFreeState(f->normal(), ds);
-        bool const slidingState = Resting::canGoToSlidingState(f->normal(), ds);
-        bool const rollingState
-          = Resting::canGoToRollingState(f->normal(), ds, o->velocity(), getRotationAxis(o));
+        bool const freeState    = Resting::canGoToFreeState(p->normal(), ds);
+        bool const slidingState = Resting::canGoToSlidingState(p->normal(), ds);
+        bool const rollingState = Resting::canGoToRollingState(p->normal(), ds, v, getRotationAxis(s));
         if (freeState) {
-          o->setState(States::Free);
-          std::cout << o->m_name << " set to Free" << std::endl;
-          attachments.erase(o);
+          s->setState(States::Free);
+          //          std::cout << s->m_name << " set to Free" << std::endl;
+          attachmentsOsFp.erase(s);
         }
         else if (rollingState) {
-          o->setState(States::Rolling);
-          std::cout << o->m_name << " set to Rolling" << std::endl;
+          s->setState(States::Rolling);
+          //          std::cout << s->m_name << " set to Rolling" << std::endl;
         }
         else if (slidingState) {
-          o->setState(States::Sliding);
-          std::cout << o->m_name << " set to Sliding" << std::endl;
+          s->setState(States::Sliding);
+          //          std::cout << s->m_name << " set to Sliding" << std::endl;
         }
       } break;
       case States::Sliding: {
-        bool const freeState    = Sliding::canGoToFreeState(f->normal(), ds);
-        bool const rollingState = Sliding::canGoToRollingState(o->velocity(), getRotationAxis(o));
-        bool const restingState = Sliding::canGoToRestingState(f->normal(), ds);
+        bool const freeState    = Sliding::canGoToFreeState(p->normal(), ds);
+        bool const rollingState = Sliding::canGoToRollingState(v, getRotationAxis(s));
+        bool const restingState = Sliding::canGoToRestingState(p->normal(), ds);
         if (freeState) {
-          o->setState(States::Free);
-          std::cout << o->m_name << " set to Free" << std::endl;
-          attachments.erase(o);
+          s->setState(States::Free);
+          //          std::cout << s->m_name << " set to Free" << std::endl;
+          attachmentsOsFp.erase(s);
         }
         else if (rollingState) {
-          o->setState(States::Rolling);
-          std::cout << o->m_name << " set to Rolling" << std::endl;
+          s->setState(States::Rolling);
+          //          std::cout << s->m_name << " set to Rolling" << std::endl;
         }
         else if (restingState) {
-          o->setState(States::Resting);
-          std::cout << o->m_name << " set to Resting" << std::endl;
+          s->setState(States::Resting);
+          //          std::cout << s->m_name << " set to Resting" << std::endl;
+          //          std::cout << "x: " << s->point()[0] << " z: " << s->point()[2] << std::endl;
         }
       } break;
       case States::Rolling: {
-        bool freeState    = Rolling::canGoToFreeState(f->normal(), ds);
-        bool slidingState = Rolling::canGoToSlidingState(o->velocity(), getRotationAxis(o));
-        bool restingState = Rolling::canGoToRestingState(f->normal(), ds);
+        bool freeState    = Rolling::canGoToFreeState(p->normal(), ds);
+        bool slidingState = Rolling::canGoToSlidingState(v, getRotationAxis(s));
+        bool restingState = Rolling::canGoToRestingState(p->normal(), ds);
         if (freeState) {
-          o->setState(States::Free);
-          std::cout << o->m_name << " set to Free" << std::endl;
-          attachments.erase(o);
+          s->setState(States::Free);
+          //          std::cout << s->m_name << " set to Free" << std::endl;
+          attachmentsOsFp.erase(s);
         }
         else if (slidingState) {
-          o->setState(States::Sliding);
-          std::cout << o->m_name << " set to Sliding" << std::endl;
+          s->setState(States::Sliding);
+          //          std::cout << s->m_name << " set to Sliding" << std::endl;
         }
         else if (restingState) {
-          o->setState(States::Resting);
-          std::cout << o->m_name << " set to Resting" << std::endl;
+          s->setState(States::Resting);
+          //          std::cout << s->m_name << " set to Resting" << std::endl;
+          //          std::cout << "x: " << s->point()[0] << " z: " << s->point()[2] << std::endl;
         }
       } break;
     }
   }
 
   // Helpers
-  inline V3 getRotationAxis(Sphere* o) {
-    auto const n      = o->rotationNormal();
-    auto const w_axis = -(blaze::evaluate(o->radius() * blaze::evaluate(blaze::cross(o->velocity(), n))));
+  inline V3 getRotationAxis(Sphere* s) {
+    auto const n      = s->rotationNormal();
+    auto const v      = s->velocity();
+    auto const r      = s->radius();
+    auto const w_axis = -(blaze::evaluate(r * blaze::evaluate(blaze::cross(v, n))));
     return w_axis;
   }
 }   // namespace dte3607::coldet::utils::state

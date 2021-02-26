@@ -21,14 +21,11 @@ using namespace std::chrono_literals;
 
 
 
-namespace app
-{
+namespace app {
 
-  namespace d
-  {
+  namespace d {
 
-    inline QMatrix3x3 toQtRotationFrame(app::Frame3H const& frame_h)
-    {
+    inline QMatrix3x3 toQtRotationFrame(app::Frame3H const& frame_h) {
       QMatrix3x3  rf_qt;
       auto const& rf = blaze::submatrix<0ul, 0ul, 3ul, 3ul>(frame_h);
 
@@ -45,8 +42,7 @@ namespace app
       return rf_qt;
     }
 
-    inline QVector3D toQtFrameOrigin(app::Frame3H const& frame_h)
-    {
+    inline QVector3D toQtFrameOrigin(app::Frame3H const& frame_h) {
       QVector3D   origin;
       auto const& fo = blaze::subvector<0ul, 3ul>(blaze::column<3ul>(frame_h));
       origin[0]      = float(fo[0]);
@@ -55,8 +51,7 @@ namespace app
       return origin;
     }
 
-    inline QVector3D toQtVector3D(app::Vector3 const& p_v)
-    {
+    inline QVector3D toQtVector3D(app::Vector3 const& p_v) {
 
       return QVector3D{float(p_v[0]), float(p_v[1]), float(p_v[2])};
     }
@@ -65,16 +60,13 @@ namespace app
   }   // namespace d
 
 
-  void ScenarioModel::resetScenario(std::weak_ptr<ScenarioWrapperBase> scenario)
-  {
+  void ScenarioModel::resetScenario(std::weak_ptr<ScenarioWrapperBase> scenario) {
     beginResetModel();
     m_scenario = scenario;
     endResetModel();
   }
 
-  ScenarioModel::GeometryType
-  ScenarioModel::geometryType(const QModelIndex& index) const
-  {
+  ScenarioModel::GeometryType ScenarioModel::geometryType(const QModelIndex& index) const {
     auto sim = m_scenario.lock();
     if (not sim) return GeometryType::NA;
 
@@ -83,8 +75,7 @@ namespace app
     return GeometryType(sim->geometryType(size_t(index.row())));
   }
 
-  int ScenarioModel::rowCount(const QModelIndex& /*index*/) const
-  {
+  int ScenarioModel::rowCount(const QModelIndex& /*index*/) const {
     auto sim = m_scenario.lock();
     if (not sim) return 0;
 
@@ -94,8 +85,7 @@ namespace app
 
 
 
-  QVariant ScenarioModel::data(const QModelIndex& index, int role_in) const
-  {
+  QVariant ScenarioModel::data(const QModelIndex& index, int role_in) const {
 
     if (not index.isValid()) return {};
 
@@ -132,9 +122,7 @@ namespace app
 
 
 
-  QVariant ScenarioModel::sphereData(const QModelIndex& index,
-                                     int                role_in) const
-  {
+  QVariant ScenarioModel::sphereData(const QModelIndex& index, int role_in) const {
     if (not index.isValid()) return {};
 
     auto sim = m_scenario.lock();
@@ -155,12 +143,11 @@ namespace app
     auto const& r     = std::get<2>(sphere_data);
     auto const  ea_qt = QQuaternion::fromRotationMatrix(rf_qt).toEulerAngles();
 
-    auto const role = Roles(role_in);
+    auto const& isFixed = std::get<3>(sphere_data);
+    auto const  role    = Roles(role_in);
 
     if (role == Roles::ObjectName)
-      return {(std::string("sphere <") + std::to_string(index.row())
-               + std::string(">"))
-                .c_str()};
+      return {(std::string("sphere <") + std::to_string(index.row()) + std::string(">")).c_str()};
     else if (role == Roles::FrameOrigin)
       return QVariant(fo_qt);
     else if (role == Roles::Velocity)
@@ -171,6 +158,8 @@ namespace app
       return QVariant(ea_qt);
     else if (role == Roles::RandomColor)
       return QVariant(QColor("red"));
+    else if (role == Roles::FixedSphere)
+      return QVariant(isFixed);
 
 
     // Geometry
@@ -191,8 +180,7 @@ namespace app
     return {};
   }
 
-  QVariant ScenarioModel::planeData(const QModelIndex& index, int role_in) const
-  {
+  QVariant ScenarioModel::planeData(const QModelIndex& index, int role_in) const {
     if (not index.isValid()) return {};
 
     auto sim = m_scenario.lock();
@@ -217,9 +205,7 @@ namespace app
 
     auto const role = Roles(role_in);
     if (role == Roles::ObjectName)
-      return {(std::string("fixed plane <") + std::to_string(plane_idx)
-               + std::string(">"))
-                .c_str()};
+      return {(std::string("fixed plane <") + std::to_string(plane_idx) + std::string(">")).c_str()};
     else if (role == Roles::FrameOrigin)
       return QVariant(fo_qt);
     else if (role == Roles::EulerRotation)
@@ -251,16 +237,13 @@ namespace app
     return {};
   }
 
-  QVariant ScenarioModel::limitedPlaneData(const QModelIndex& index,
-                                           int                role_in) const
-  {
+  QVariant ScenarioModel::limitedPlaneData(const QModelIndex& index, int role_in) const {
     if (not index.isValid()) return {};
 
     auto sim = m_scenario.lock();
     if (not sim) return {};
 
-    const auto lplane_idx
-      = size_t(index.row()) - sim->limitedPlanesOffset();
+    const auto lplane_idx = size_t(index.row()) - sim->limitedPlanesOffset();
 
     auto const& lplane_data_opt = sim->limitedPlaneData(lplane_idx);
     if (not lplane_data_opt) return {};
@@ -280,9 +263,7 @@ namespace app
 
     auto const role = Roles(role_in);
     if (role == Roles::ObjectName)
-      return {(std::string("fixed plane <") + std::to_string(lplane_idx)
-               + std::string(">"))
-                .c_str()};
+      return {(std::string("fixed plane <") + std::to_string(lplane_idx) + std::string(">")).c_str()};
     else if (role == Roles::FrameOrigin)
       return QVariant(fo_qt);
     else if (role == Roles::EulerRotation)
@@ -292,7 +273,7 @@ namespace app
 
 
       LimitedPlaneGeometry* lplane = new LimitedPlaneGeometry;
-      lplane->set(p,u,v,t);
+      lplane->set(p, u, v, t);
       return QVariant::fromValue(lplane);
     }
 
@@ -300,24 +281,21 @@ namespace app
     return {};
   }
 
-  QVariant ScenarioModel::bezierSurfaceData(const QModelIndex& index,
-                                            int                role_in) const
-  {
+  QVariant ScenarioModel::bezierSurfaceData(const QModelIndex& index, int role_in) const {
     if (not index.isValid()) return {};
 
     auto sim = m_scenario.lock();
     if (not sim) return {};
 
-    const auto bez_idx
-      = size_t(index.row()) - sim->bezierSurfacesOffset();
+    const auto bez_idx = size_t(index.row()) - sim->bezierSurfacesOffset();
 
     auto const& bez_data_opt = sim->bezierSurfaceData(bez_idx);
     if (not bez_data_opt) return {};
 
-    [[maybe_unused]]auto const& bez_data = bez_data_opt.value();
+    [[maybe_unused]] auto const& bez_data = bez_data_opt.value();
 
     auto const& frame_h = std::get<0>(bez_data);
-    auto const& cn       = std::get<1>(bez_data);
+    auto const& cn      = std::get<1>(bez_data);
 
     auto const fo_qt = d::toQtFrameOrigin(frame_h);
 
@@ -326,16 +304,14 @@ namespace app
 
     auto const role = Roles(role_in);
     if (role == Roles::ObjectName)
-      return {(std::string("bezier surface <") + std::to_string(bez_idx)
-               + std::string(">"))
-                .c_str()};
+      return {(std::string("bezier surface <") + std::to_string(bez_idx) + std::string(">")).c_str()};
     else if (role == Roles::FrameOrigin)
       return QVariant(fo_qt);
     else if (role == Roles::EulerRotation)
       return QVariant(ea_qt);
     else if (role == Roles::Geometry) {
-      using BzSG    = gmqt::BezierSurfaceGeometry;
-      auto* bezsurf = new BzSG();
+      using BzSG              = gmqt::BezierSurfaceGeometry;
+      auto* bezsurf           = new BzSG();
       bezsurf->m_bezsurf->m_C = cn;
       bezsurf->setNoSamples({15, 15});
       return QVariant::fromValue(bezsurf);
@@ -345,8 +321,7 @@ namespace app
     return {};
   }
 
-  QHash<int, QByteArray> ScenarioModel::roleNames() const
-  {
+  QHash<int, QByteArray> ScenarioModel::roleNames() const {
     QHash<int, QByteArray> names;
 
     names[int(Roles::ObjectName)]  = "object_name";
@@ -360,6 +335,8 @@ namespace app
     names[int(Roles::GeometrySource)] = "geometry_source";
     names[int(Roles::Geometry)]       = "geometry_gmlib";
     names[int(Roles::GeometryType)]   = "geometry_type";
+
+    names[int(Roles::FixedSphere)] = "fixed_sphere";
 
     return names;
   }
@@ -375,8 +352,7 @@ namespace app
   int ScenarioModel::noObjects() const { return m_no_objects_cache; }
 
 
-  void ScenarioModel::updateSimulatinFrameTimings(int timestep, int simtime)
-  {
+  void ScenarioModel::updateSimulatinFrameTimings(int timestep, int simtime) {
     m_timestep.add(timestep);
     m_simtime.add(simtime);
 
@@ -386,15 +362,13 @@ namespace app
     emit simLoopSimtimeAverageChanged(m_simtime.avg());
   }
 
-  void ScenarioModel::updateScene()
-  {
+  void ScenarioModel::updateScene() {
     std::scoped_lock lock(m_modelupdate_mutex);
 
     auto scenario = m_scenario.lock();
     if (not scenario) return;
 
-    const auto no_objs
-      = scenario->numberOfSpheres() + scenario->numberOfPlanes();
+    const auto no_objs = scenario->numberOfSpheres() + scenario->numberOfPlanes();
 
     if (std::cmp_not_equal(m_no_objects_cache, no_objs)) {
       m_no_objects_cache = int(no_objs);
@@ -408,7 +382,6 @@ namespace app
     updated_roles.append(int(Roles::EulerRotation));
     updated_roles.append(int(Roles::Velocity));
 
-    emit dataChanged(createIndex(0, 0), createIndex(int(no_objs) - 1, 0),
-                     updated_roles);
+    emit dataChanged(createIndex(0, 0), createIndex(int(no_objs) - 1, 0), updated_roles);
   }
 }   // namespace app

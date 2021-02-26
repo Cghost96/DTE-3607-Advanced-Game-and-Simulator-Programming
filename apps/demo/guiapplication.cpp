@@ -15,6 +15,8 @@
 #include <coldet/solver_development/step4.h>
 #include <coldet/solver_development/testing_solvers.h>
 #include <coldet/mysolvers/rolling.h>
+#include <coldet/mysolvers/limited_planes.h>
+#include <coldet/mysolvers/limited_planes_timer.h>
 
 namespace app {
 
@@ -84,6 +86,7 @@ namespace app {
     m_scenariolistmodel->update();
   }
 
+  /*
   void GuiApplication::registerScenario001AlgStep0() {
     auto ctr_fn = []() { return dte3607::coldet::utils::scenario_factories::constructScenario001(); };
     auto slv_fn = [](auto& scenario, auto const& time_step) {
@@ -370,6 +373,7 @@ namespace app {
 
     registerScenario("Component Test Scenario 03", ctr_fn, slv_fn);
   }
+*/
 
   /* --------------------------------------------------------------------------------- */
   /* ------------------------------- PROJECT SCENARIOS ------------------------------- */
@@ -382,92 +386,106 @@ namespace app {
   //      return dte3607::coldet::utils::scenario_factories::/*name of factory function*/();
   //    };
   //    auto slv_fn = [](auto& scenario, auto const& time_step) {
-  //      dte3607::coldet::mysolvers::/*step name*/::solve(scenario, time_step);
+  //      dte3607::coldet::mysolvers::limited_planes::solve(scenario, time_step);
   //    };
 
   //    registerScenario(/*Scenario name*/, ctr_fn, slv_fn);
   //  }
 
-  void GuiApplication::registerScenarioGaltonVerticalFallFlatGround01() {
-    auto ctr_fn = []() {
-      return dte3607::coldet::utils::scenario_factories::constructGaltonVerticalFallFlatGround01();
-    };
+  /* --------------------GALTON-------------------- */
+  /* --------------------NO TOUCHING ALLOWED IN FUNNEL-------------------- */
+  void GuiApplication::registerScenarioGaltonTest01() {
+    auto ctr_fn = []() { return dte3607::coldet::utils::scenario_factories::constructGaltonTest01(); };
     auto slv_fn = [](auto& scenario, auto const& time_step) {
-      dte3607::coldet::mysolvers::rolling::solve(scenario, time_step);
+      dte3607::coldet::mysolvers::limited_planes::solve(scenario, time_step);
     };
 
-    registerScenario("G - vertical fall flat ground 01", ctr_fn, slv_fn);
+    registerScenario("G - 1 s", ctr_fn, slv_fn);
   }
 
-  void GuiApplication::registerScenarioGaltonRollSlopedGround01() {
-    auto ctr_fn
-      = []() { return dte3607::coldet::utils::scenario_factories::constructGaltonRollSlopedGround01(); };
+  void GuiApplication::registerScenarioGaltonTest02() {
+    auto ctr_fn = []() { return dte3607::coldet::utils::scenario_factories::constructGaltonTest02(); };
     auto slv_fn = [](auto& scenario, auto const& time_step) {
-      dte3607::coldet::mysolvers::rolling::solve(scenario, time_step);
+      dte3607::coldet::mysolvers::limited_planes::solve(scenario, time_step);
     };
 
-    registerScenario("G - roll sloped ground 01", ctr_fn, slv_fn);
+    registerScenario("G - 10 s", ctr_fn, slv_fn);
   }
 
-  void GuiApplication::registerScenarioGaltonRollSlopedGround02() {
-    auto ctr_fn
-      = []() { return dte3607::coldet::utils::scenario_factories::constructGaltonRollSlopedGround02(); };
+  void GuiApplication::registerScenarioGaltonTest03() {
+    auto ctr_fn = []() { return dte3607::coldet::utils::scenario_factories::constructGaltonTest03(); };
     auto slv_fn = [](auto& scenario, auto const& time_step) {
-      dte3607::coldet::mysolvers::rolling::solve(scenario, time_step);
+      dte3607::coldet::mysolvers::limited_planes::solve(scenario, time_step);
     };
 
-    registerScenario("G - roll sloped ground 02", ctr_fn, slv_fn);
+    registerScenario("G - 50 s", ctr_fn, slv_fn);
   }
 
-  void GuiApplication::registerScenarioGaltonRollSlopedGround03() {
-    auto ctr_fn
-      = []() { return dte3607::coldet::utils::scenario_factories::constructGaltonRollSlopedGround03(); };
+  void GuiApplication::registerScenarioGaltonTest04() {
+    auto ctr_fn = []() { return dte3607::coldet::utils::scenario_factories::constructGaltonTest04(); };
     auto slv_fn = [](auto& scenario, auto const& time_step) {
-      dte3607::coldet::mysolvers::rolling::solve(scenario, time_step);
+      dte3607::coldet::mysolvers::limited_planes::solve(scenario, time_step);
     };
 
-    registerScenario("G - roll sloped ground 03", ctr_fn, slv_fn);
+    registerScenario("G - 80 s", ctr_fn, slv_fn);
   }
 
-  void GuiApplication::registerScenarioGaltonRollSlopedGround04() {
-    auto ctr_fn
-      = []() { return dte3607::coldet::utils::scenario_factories::constructGaltonRollSlopedGround04(); };
+  void GuiApplication::registerScenarioGaltonTest05() {
+    auto ctr_fn = []() { return dte3607::coldet::utils::scenario_factories::constructGaltonTest05(); };
     auto slv_fn = [](auto& scenario, auto const& time_step) {
-      dte3607::coldet::mysolvers::rolling::solve(scenario, time_step);
+      dte3607::coldet::mysolvers::limited_planes::solve(scenario, time_step);
     };
 
-    registerScenario("G - roll sloped ground 04", ctr_fn, slv_fn);
+    registerScenario("G - 100 s", ctr_fn, slv_fn);
   }
 
-  void GuiApplication::registerScenarioGaltonRollSlopedGround05() {
-    auto ctr_fn
-      = []() { return dte3607::coldet::utils::scenario_factories::constructGaltonRollSlopedGround05(); };
+
+  /* --------------------TOUCHING ALLOWED IN FUNNEL-------------------- */
+  void GuiApplication::registerScenarioGaltonTest06() {
+    auto ctr_fn = []() { return dte3607::coldet::utils::scenario_factories::constructGaltonTest06(); };
     auto slv_fn = [](auto& scenario, auto const& time_step) {
-      dte3607::coldet::mysolvers::rolling::solve(scenario, time_step);
+      dte3607::coldet::mysolvers::limited_planes::solve(scenario, time_step);
     };
 
-    registerScenario("G - funnel infinite", ctr_fn, slv_fn);
+    registerScenario("G - 100 s w touch", ctr_fn, slv_fn);
   }
 
-  void GuiApplication::registerScenarioGaltonRollingCollisionFlatGround01() {
-    auto ctr_fn = []() {
-      return dte3607::coldet::utils::scenario_factories::constructGaltonRollingCollisionFlatGround01();
-    };
+  void GuiApplication::registerScenarioGaltonTest07() {
+    auto ctr_fn = []() { return dte3607::coldet::utils::scenario_factories::constructGaltonTest07(); };
     auto slv_fn = [](auto& scenario, auto const& time_step) {
-      dte3607::coldet::mysolvers::rolling::solve(scenario, time_step);
+      dte3607::coldet::mysolvers::limited_planes::solve(scenario, time_step);
     };
 
-    registerScenario("G - roll col flat ground 01", ctr_fn, slv_fn);
+    registerScenario("G - 200 s w touch", ctr_fn, slv_fn);
   }
 
-  void GuiApplication::registerScenarioGaltonRollingCollisionAir01() {
-    auto ctr_fn
-      = []() { return dte3607::coldet::utils::scenario_factories::constructGaltonRollingCollisionAir01(); };
+
+  /* ----------------TOUCHING ALLOWED IN FUNNEL AND TIMER---------------- */
+  void GuiApplication::registerScenarioGaltonTest08() {
+    auto ctr_fn = []() { return dte3607::coldet::utils::scenario_factories::constructGaltonTest08(); };
     auto slv_fn = [](auto& scenario, auto const& time_step) {
-      dte3607::coldet::mysolvers::rolling::solve(scenario, time_step);
+      dte3607::coldet::mysolvers::limited_planes_timer::solve(scenario, time_step);
     };
 
-    registerScenario("G - roll col air 01", ctr_fn, slv_fn);
+    registerScenario("G - 10 s w touch and timer", ctr_fn, slv_fn);
+  }
+
+  void GuiApplication::registerScenarioGaltonTest09() {
+    auto ctr_fn = []() { return dte3607::coldet::utils::scenario_factories::constructGaltonTest09(); };
+    auto slv_fn = [](auto& scenario, auto const& time_step) {
+      dte3607::coldet::mysolvers::limited_planes_timer::solve(scenario, time_step);
+    };
+
+    registerScenario("G - 100 s w touch and timer", ctr_fn, slv_fn);
+  }
+
+  void GuiApplication::registerScenarioGaltonTest10() {
+    auto ctr_fn = []() { return dte3607::coldet::utils::scenario_factories::constructGaltonTest10(); };
+    auto slv_fn = [](auto& scenario, auto const& time_step) {
+      dte3607::coldet::mysolvers::limited_planes_timer::solve(scenario, time_step);
+    };
+
+    registerScenario("G - 200 s w touch and timer", ctr_fn, slv_fn);
   }
 
 }   // namespace app

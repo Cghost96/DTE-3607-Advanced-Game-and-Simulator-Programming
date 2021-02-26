@@ -20,7 +20,18 @@ namespace dte3607::coldet::concepts::scenario_fixtures
       concept HasSpheres =
           geometry::IsSphere<typename ScenarioFixture_T::Sphere> and
           requires(ScenarioFixture_T obj) { {obj.spheres()}; } and
-          requires(ScenarioFixture_T const obj) { {obj.spheres()};};
+          requires(ScenarioFixture_T const obj) { {obj.spheres()}; };
+
+      template <typename ScenarioFixture_T>
+      concept HasFixedSpheres =
+          geometry::IsSphere<typename ScenarioFixture_T::Sphere> and
+          requires(ScenarioFixture_T obj) { {obj.fixedSpheres()}; } and
+          requires(ScenarioFixture_T const obj) { {obj.fixedSpheres()}; };
+
+      template <typename ScenarioFixture_T>
+      concept HasAllSpheres =
+              HasSpheres<ScenarioFixture_T> and
+              HasFixedSpheres<ScenarioFixture_T>;
 
       template <typename ScenarioFixture_T>
       concept HasDynamicSpheres =
@@ -50,6 +61,8 @@ namespace dte3607::coldet::concepts::scenario_fixtures
           mechanics::HasRestingState<typename ScenarioFixture_T::Sphere> and
           mechanics::HasSlidingState<typename ScenarioFixture_T::Sphere> and
           mechanics::HasRollingState<typename ScenarioFixture_T::Sphere>;
+
+
 
       template <typename ScenarioFixture_T>
       concept HasFixedPlanes =
@@ -124,6 +137,11 @@ namespace dte3607::coldet::concepts::scenario_fixtures
   template <typename ScenarioFixture_T>
   concept SolverFixtureGaltonRolling =
           solver_dev::SolverDevFixtureStep4<ScenarioFixture_T>;
+
+  template <typename ScenarioFixture_T>
+  concept SolverFixtureGaltonLimitedPlane =
+          SolverFixtureGaltonRolling<ScenarioFixture_T> and
+          solver_dev::components::HasAllSpheres<ScenarioFixture_T>;
 
 }   // namespace dte3607::coldet::concepts::scenario_fixtures
 

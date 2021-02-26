@@ -1,4 +1,4 @@
-#include <coldet/mysolvers/myfirstsolvers.h>
+//#include <coldet/mysolvers/myfirstsolvers.h>
 #include <coldet/bits/types.h>
 // gtest
 #include <gtest/gtest.h>   // googletest header file

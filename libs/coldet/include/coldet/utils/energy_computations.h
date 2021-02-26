@@ -1,10 +1,12 @@
 #ifndef ENERGY_COMPUTATIONS_H
 #define ENERGY_COMPUTATIONS_H
 
-#include <blaze/Math.h>
 #include "../bits/types.h"
 #include "../bits/rigidbodies.h"
 #include "../utils/type_conversion.h"
+
+#include <blaze/Math.h>
+#include <unordered_map>
 
 namespace dte3607::coldet::utils::energy {
 
@@ -13,10 +15,11 @@ namespace dte3607::coldet::utils::energy {
   using NS                   = types::NanoSeconds;
   using Sphere               = rigidbodies::Sphere;
   using FixedPlane           = rigidbodies::FixedPlane;
-  using SFPAttachments       = std::unordered_map<Sphere*, FixedPlane*>;
+  using OsFpAttachments      = std::unordered_map<Sphere*, FixedPlane*>;
   using States               = rigidbodies::Sphere::States;
   auto const compressionTime = 1.;
 
+  // Prototypes
   VT getTotalFriction(const VT µ1, const VT µ2);
   namespace motion {
     V3 getPreTangentialAcceleration(V3 const& force, VT const& m, VT const& µ1, VT const& µ2, VT const& r,
@@ -25,17 +28,17 @@ namespace dte3607::coldet::utils::energy {
   }   // namespace motion
 
   namespace dampening {
-    inline void addTimeDependentLoss(Sphere* o, SFPAttachments const& attachments, NS const dt) {
-      if (o->state() == States::Sliding || o->state() == States::Rolling) {
-        auto const µ1          = o->frictionCoef();
-        auto const µ2          = attachments.at(o)->frictionCoef();
+    inline void addTimeDependentLoss(Sphere* s, OsFpAttachments const& attachments, NS const dt) {
+      if (s->state() == States::Sliding || s->state() == States::Rolling) {
+        auto const µ1          = s->frictionCoef();
+        auto const µ2          = attachments.at(s)->frictionCoef();
         auto const dt_seconds  = utils::toDt(dt);
         VT const   loss_factor = (getTotalFriction(µ1, µ2) * dt_seconds) / 1.;
-        V3 const   new_v       = {o->velocity()[0] - (o->velocity()[0] * loss_factor),
-                          o->velocity()[1] - (o->velocity()[1] * loss_factor),
-                          o->velocity()[2] - (o->velocity()[2] * loss_factor)};
+        V3 const   new_v       = {s->velocity()[0] - (s->velocity()[0] * loss_factor),
+                          s->velocity()[1] - (s->velocity()[1] * loss_factor),
+                          s->velocity()[2] - (s->velocity()[2] * loss_factor)};
 
-        o->setVelocity(new_v);
+        s->setVelocity(new_v);
       }
     }
 
