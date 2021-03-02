@@ -360,577 +360,576 @@ namespace dte3607::coldet::utils::scenario_factories {
       detail::add_fixed_plane(*fixture, "plane_dos", {0, 1, 0}, {0, 1, 0});
       return fixture;
     }
+  inline std::unique_ptr<scenario_fixtures::FixtureOsFp> constructScenario003() {
+    // Construct scenario
+    auto fixture = std::make_unique<scenario_fixtures::FixtureOsFp>();
 
-    inline std::unique_ptr<scenario_fixtures::FixtureOsFp> constructScenario003() {
-      // Construct scenario
-      auto fixture = std::make_unique<scenario_fixtures::FixtureOsFp>();
+    // Setup global system
+    fixture->forces().G = types::Vector3{0, 0, 0};
 
-      // Setup global system
-      fixture->forces().G = types::Vector3{0, 0, 0};
+    // Set up spheres
+    auto const p1 = types::Vector3{-10, 25, -10};
+    auto const v1 = types::Vector3{10, 0, 0};
 
-      // Set up spheres
-      auto const p1 = types::Vector3{-10, 25, -10};
-      auto const v1 = types::Vector3{10, 0, 0};
+    auto const p2 = types::Vector3{-10, 15, 0};
+    auto const v2 = types::Vector3{100, 0, 0};
 
-      auto const p2 = types::Vector3{-10, 15, 0};
-      auto const v2 = types::Vector3{100, 0, 0};
+    auto const p3 = types::Vector3{-10, 5, 10};
+    auto const v3 = types::Vector3{10000, 0, 0};
 
-      auto const p3 = types::Vector3{-10, 5, 10};
-      auto const v3 = types::Vector3{10000, 0, 0};
+    detail::add_sphere(*fixture, "S1", v1, p1, 1);
+    detail::add_sphere(*fixture, "S2", v2, p2, 1);
+    detail::add_sphere(*fixture, "S3", v3, p3, 1);
 
-      detail::add_sphere(*fixture, "S1", v1, p1, 1);
-      detail::add_sphere(*fixture, "S2", v2, p2, 1);
-      detail::add_sphere(*fixture, "S3", v3, p3, 1);
+    // Setup fixed planes
+    detail::add_fixed_plane(*fixture, "plane_dos", {-15, 15, 0}, {1, 0, 0});
+    detail::add_fixed_plane(*fixture, "plane_uno", {15, 15, 0}, {-1, 0, 0});
 
-      // Setup fixed planes
-      detail::add_fixed_plane(*fixture, "plane_dos", {-15, 15, 0}, {1, 0, 0});
-      detail::add_fixed_plane(*fixture, "plane_uno", {15, 15, 0}, {-1, 0, 0});
+    return fixture;
+  }
 
-      return fixture;
-    }
+  inline std::unique_ptr<scenario_fixtures::FixtureOsFp> constructScenario004() {
+    // Construct scenario
+    auto fixture = std::make_unique<scenario_fixtures::FixtureOsFp>();
 
-    inline std::unique_ptr<scenario_fixtures::FixtureOsFp> constructScenario004() {
-      // Construct scenario
-      auto fixture = std::make_unique<scenario_fixtures::FixtureOsFp>();
+    // Setup global system
+    fixture->forces().G = types::Vector3{0, -9.833, 0};
 
-      // Setup global system
-      fixture->forces().G = types::Vector3{0, -9.833, 0};
+    // Set up spheres
+    auto const p1 = types::Vector3{-10, 5, 0};
+    auto const v1 = types::Vector3{10, 10, 0};
 
-      // Set up spheres
-      auto const p1 = types::Vector3{-10, 5, 0};
-      auto const v1 = types::Vector3{10, 10, 0};
+    auto const p2 = types::Vector3{10, 5, 0};
+    auto const v2 = types::Vector3{-10, 10, 0};
 
-      auto const p2 = types::Vector3{10, 5, 0};
-      auto const v2 = types::Vector3{-10, 10, 0};
+    detail::add_sphere(*fixture, "S1", v1, p1, 1.0);
+    detail::add_sphere(*fixture, "S2", v2, p2, 1.0);
 
-      detail::add_sphere(*fixture, "S1", v1, p1, 1.0);
-      detail::add_sphere(*fixture, "S2", v2, p2, 1.0);
+    // Setup fixed planes
+    detail::add_fixed_plane(*fixture, "plane_dos", {0, 0, 0}, {0, 1, 0});
 
-      // Setup fixed planes
-      detail::add_fixed_plane(*fixture, "plane_dos", {0, 0, 0}, {0, 1, 0});
+    return fixture;
+  }
 
-      return fixture;
-    }
+  inline std::unique_ptr<scenario_fixtures::FixtureOsFp> constructScenario005() {
+    // Construct scenario
+    auto fixture = std::make_unique<scenario_fixtures::FixtureOsFp>();
 
-    inline std::unique_ptr<scenario_fixtures::FixtureOsFp> constructScenario005() {
-      // Construct scenario
-      auto fixture = std::make_unique<scenario_fixtures::FixtureOsFp>();
+    // Setup global system
+    fixture->forces().G = types::Vector3{0, -9.833, 0};
 
-      // Setup global system
-      fixture->forces().G = types::Vector3{0, -9.833, 0};
+    // Set up spheres
+    auto const p1 = types::Vector3{-10, 5, -2};
+    auto const v1 = types::Vector3{10, 10, 0};
 
-      // Set up spheres
-      auto const p1 = types::Vector3{-10, 5, -2};
-      auto const v1 = types::Vector3{10, 10, 0};
+    auto const p2 = types::Vector3{10, 5, 2};
+    auto const v2 = types::Vector3{-10, 10, 0};
 
-      auto const p2 = types::Vector3{10, 5, 2};
-      auto const v2 = types::Vector3{-10, 10, 0};
+    detail::add_sphere(*fixture, "S1", v1, p1, 1.0);
+    detail::add_sphere(*fixture, "S2", v2, p2, 5.0);
 
-      detail::add_sphere(*fixture, "S1", v1, p1, 1.0);
-      detail::add_sphere(*fixture, "S2", v2, p2, 5.0);
+    // Setup fixed planes
+    detail::add_fixed_plane(*fixture, "plane_dos", {0, 0, 0}, {0, 1, 0});
 
-      // Setup fixed planes
-      detail::add_fixed_plane(*fixture, "plane_dos", {0, 0, 0}, {0, 1, 0});
+    return fixture;
+  }
 
-      return fixture;
-    }
+  inline std::unique_ptr<scenario_fixtures::FixtureOsFp> constructScenario006() {
+    // Construct scenario
+    auto fixture = std::make_unique<scenario_fixtures::FixtureOsFp>();
 
-    inline std::unique_ptr<scenario_fixtures::FixtureOsFp> constructScenario006() {
-      // Construct scenario
-      auto fixture = std::make_unique<scenario_fixtures::FixtureOsFp>();
+    // Setup global system
+    fixture->forces().G = types::Vector3{0, -9.833, 0};
 
-      // Setup global system
-      fixture->forces().G = types::Vector3{0, -9.833, 0};
+    // Set up spheres
+    auto const p1 = types::Vector3{-10, 15, 0};
+    auto const v1 = types::Vector3{100, 0, 0};
 
-      // Set up spheres
-      auto const p1 = types::Vector3{-10, 15, 0};
-      auto const v1 = types::Vector3{100, 0, 0};
+    auto const p2 = types::Vector3{10, 15, 0};
+    auto const v2 = types::Vector3{-100, 0, 0};
 
-      auto const p2 = types::Vector3{10, 15, 0};
-      auto const v2 = types::Vector3{-100, 0, 0};
+    detail::add_sphere(*fixture, "S1", v1, p1, 3);
+    detail::add_sphere(*fixture, "S2", v2, p2, 3);
 
-      detail::add_sphere(*fixture, "S1", v1, p1, 3);
-      detail::add_sphere(*fixture, "S2", v2, p2, 3);
+    // Setup fixed planes
+    detail::add_fixed_plane(*fixture, "plane_dos", {-15, 15, 0}, {1, 0, 0});
+    detail::add_fixed_plane(*fixture, "plane_uno", {15, 15, 0}, {-1, 0, 0});
+    detail::add_fixed_plane(*fixture, "plane_tres", {0, 0, 0}, {0, 1, 0});
 
-      // Setup fixed planes
-      detail::add_fixed_plane(*fixture, "plane_dos", {-15, 15, 0}, {1, 0, 0});
-      detail::add_fixed_plane(*fixture, "plane_uno", {15, 15, 0}, {-1, 0, 0});
-      detail::add_fixed_plane(*fixture, "plane_tres", {0, 0, 0}, {0, 1, 0});
+    return fixture;
+  }
 
-      return fixture;
-    }
+  inline std::unique_ptr<scenario_fixtures::FixtureOsFp> constructScenario007() {
+    // Construct scenario
+    auto fixture = std::make_unique<scenario_fixtures::FixtureOsFp>();
 
-    inline std::unique_ptr<scenario_fixtures::FixtureOsFp> constructScenario007() {
-      // Construct scenario
-      auto fixture = std::make_unique<scenario_fixtures::FixtureOsFp>();
+    // Setup global system
+    fixture->forces().G = types::Vector3{0, -9.833, 0};
 
-      // Setup global system
-      fixture->forces().G = types::Vector3{0, -9.833, 0};
+    // Set up spheres
+    auto const p = types::Vector3{-10, 5, -10};
+    auto const v = types::Vector3{0, 0, 0};
 
-      // Set up spheres
-      auto const p = types::Vector3{-10, 5, -10};
-      auto const v = types::Vector3{0, 0, 0};
+    std::vector<std::tuple<types::Vector3, types::Vector3>> sphere_data;
+    sphere_data.reserve(3 * 3 * 3);
+    for (auto x = 0; x < 3; ++x)
+      for (auto y = 0; y < 3; ++y)
+        for (auto z = 0; z < 3; ++z)
+          sphere_data.emplace_back(v, p + types::Vector3{10. * x, 10. * y, 10. * z});
 
-      std::vector<std::tuple<types::Vector3, types::Vector3>> sphere_data;
-      sphere_data.reserve(3 * 3 * 3);
-      for (auto x = 0; x < 3; ++x)
-        for (auto y = 0; y < 3; ++y)
-          for (auto z = 0; z < 3; ++z)
-            sphere_data.emplace_back(v, p + types::Vector3{10. * x, 10. * y, 10. * z});
+    for (auto const& sd : sphere_data)
+      detail::add_sphere(*fixture, "Sx", std::get<0>(sd), std::get<1>(sd), 3);
 
-      for (auto const& sd : sphere_data)
-        detail::add_sphere(*fixture, "Sx", std::get<0>(sd), std::get<1>(sd), 3);
+    // Setup fixed planes
+    detail::add_fixed_plane(*fixture, "plane_ground", {0, 0, 0}, {0, 1, 0});
 
-      // Setup fixed planes
-      detail::add_fixed_plane(*fixture, "plane_ground", {0, 0, 0}, {0, 1, 0});
+    return fixture;
+  }
 
-      return fixture;
-    }
+  inline std::unique_ptr<scenario_fixtures::FixtureOsFp> constructScenario008() {
+    // Construct scenario
+    auto fixture = std::make_unique<scenario_fixtures::FixtureOsFp>();
 
-    inline std::unique_ptr<scenario_fixtures::FixtureOsFp> constructScenario008() {
-      // Construct scenario
-      auto fixture = std::make_unique<scenario_fixtures::FixtureOsFp>();
+    // Setup global system
+    fixture->forces().G = types::Vector3{0, -9.833, 0};
 
-      // Setup global system
-      fixture->forces().G = types::Vector3{0, -9.833, 0};
+    // Set up spheres
+    auto const p = types::Vector3{-9, 10, -8};
+    auto const v = types::Vector3{0, 0, 0};
 
-      // Set up spheres
-      auto const p = types::Vector3{-9, 10, -8};
-      auto const v = types::Vector3{0, 0, 0};
+    std::vector<std::tuple<types::Vector3, types::Vector3>> sphere_data;
+    sphere_data.reserve(3 * 3 * 3);
+    for (auto x = 0; x < 3; ++x)
+      for (auto y = 0; y < 2; ++y)
+        for (auto z = 0; z < 3; ++z)
+          sphere_data.emplace_back(v, p + types::Vector3{10. * x, 20. * y, 10. * z});
 
-      std::vector<std::tuple<types::Vector3, types::Vector3>> sphere_data;
-      sphere_data.reserve(3 * 3 * 3);
-      for (auto x = 0; x < 3; ++x)
-        for (auto y = 0; y < 2; ++y)
-          for (auto z = 0; z < 3; ++z)
-            sphere_data.emplace_back(v, p + types::Vector3{10. * x, 20. * y, 10. * z});
+    for (auto const& sd : sphere_data)
+      detail::add_sphere(*fixture, "Sx", std::get<0>(sd), std::get<1>(sd), 2);
 
-      for (auto const& sd : sphere_data)
-        detail::add_sphere(*fixture, "Sx", std::get<0>(sd), std::get<1>(sd), 2);
+    // Setup fixed planes
+    detail::add_fixed_plane(*fixture, "plane_ground", {0, 0, 0}, {0, 1, 0});
+    detail::add_fixed_plane(*fixture, "plane_uno", {-10, 5, 10}, {1, 1, -1});
+    detail::add_fixed_plane(*fixture, "plane_dos", {-10, 5, -10}, {1, 1, 1});
+    detail::add_fixed_plane(*fixture, "plane_tres", {10, 5, 10}, {-1, 1, -1});
+    detail::add_fixed_plane(*fixture, "plane_cuatro", {10, 5, -10}, {-1, 1, 1});
 
-      // Setup fixed planes
-      detail::add_fixed_plane(*fixture, "plane_ground", {0, 0, 0}, {0, 1, 0});
-      detail::add_fixed_plane(*fixture, "plane_uno", {-10, 5, 10}, {1, 1, -1});
-      detail::add_fixed_plane(*fixture, "plane_dos", {-10, 5, -10}, {1, 1, 1});
-      detail::add_fixed_plane(*fixture, "plane_tres", {10, 5, 10}, {-1, 1, -1});
-      detail::add_fixed_plane(*fixture, "plane_cuatro", {10, 5, -10}, {-1, 1, 1});
+    return fixture;
+  }
 
-      return fixture;
-    }
+  inline std::unique_ptr<scenario_fixtures::FixtureOsFpPsfp_sa> constructScenario009() {
+    // Construct scenario
+    auto fixture = std::make_unique<scenario_fixtures::FixtureOsFpPsfp_sa>();
 
-    inline std::unique_ptr<scenario_fixtures::FixtureOsFpPsfp_sa> constructScenario009() {
-      // Construct scenario
-      auto fixture = std::make_unique<scenario_fixtures::FixtureOsFpPsfp_sa>();
+    // Setup global system
+    fixture->forces().G = types::Vector3{0, -9.833, 0};
 
-      // Setup global system
-      fixture->forces().G = types::Vector3{0, -9.833, 0};
-
-      // Set up spheres
-      // -- velocity - translation - radius --
-      auto const                                                                v0 = types::Vector3{0, 0, 0};
-      std::vector<std::tuple<types::Vector3, types::Vector3, types::ValueType>> sphere_data;
-      sphere_data.push_back({v0, {-10, 10, -10}, 1});
-      sphere_data.push_back({v0, {0, 10, -10}, 2});
-      sphere_data.push_back({v0, {10, 10, -10}, 3});
-      sphere_data.push_back({v0, {-10, 10, 0}, 1});
-      sphere_data.push_back({v0, {0, 10, 0}, 2});
-      sphere_data.push_back({v0, {10, 10, 0}, 3});
-      sphere_data.push_back({v0, {-10, 10, 10}, 1});
-      sphere_data.push_back({v0, {0, 10, 10}, 2});
-      sphere_data.push_back({v0, {10, 10, 10}, 3});
-      // ADD INITIAL STATES AND FRICTION AND WEIGHT
-
-
-      // add spheres
-      for (auto const& sd : sphere_data)
-        //      detail::add_sphere(*fixture, "Sx", std::get<0>(sd), std::get<1>(sd), std::get<2>(sd));
-        detail::add_sphere(*fixture, "Sx", std::get<0>(sd), std::get<1>(sd), std::get<2>(sd), 0.5);
-
-      // Setup fixed planes
-      //    detail::add_fixed_plane(*fixture, "plane_ground", {0, 0, 0}, {0, 1, 0});
-      detail::add_fixed_plane(*fixture, "plane_ground", {0, 0, 0}, {0, 1, 0}, 0.5);
-
-      return fixture;
-    }
-
-    inline std::unique_ptr<scenario_fixtures::FixtureOsFpPsfp_sa> constructScenario010() {
-      // Construct scenario
-      auto fixture = std::make_unique<scenario_fixtures::FixtureOsFpPsfp_sa>();
-
-      // Setup global system
-      //    fixture->forces().G = types::Vector3{0, -9.833, 0};
-      fixture->forces().G = types::Vector3{0, -30.0, 0};
-
-      // Set up spheres
-      // -- velocity - translation - radius --
-      std::vector<std::tuple<types::Vector3, types::Vector3, types::ValueType>> sphere_data;
-      sphere_data.push_back({{1, 1, 0}, {-10, 3.001, -10}, 3});
-      //    sphere_data.push_back({{1, 0.1, 0}, {-10, 3.001, -10}, 3});
-      sphere_data.push_back({{1, 0, 0}, {-10, 3.001, 0}, 3});
-      //    sphere_data.push_back({{1, 0, 0}, {-10, 3.001, 0}, 3});
-      sphere_data.push_back({{1, -1, 0}, {-10, 3.001, 10}, 3});
-      //    sphere_data.push_back({{1, -0.1, 0}, {-10, 3.001, 10}, 3});
-      // ADD INITIAL STATES AND FRICTION AND WEIGHT
+    // Set up spheres
+    // -- velocity - translation - radius --
+    auto const                                                                v0 = types::Vector3{0, 0, 0};
+    std::vector<std::tuple<types::Vector3, types::Vector3, types::ValueType>> sphere_data;
+    sphere_data.push_back({v0, {-10, 10, -10}, 1});
+    sphere_data.push_back({v0, {0, 10, -10}, 2});
+    sphere_data.push_back({v0, {10, 10, -10}, 3});
+    sphere_data.push_back({v0, {-10, 10, 0}, 1});
+    sphere_data.push_back({v0, {0, 10, 0}, 2});
+    sphere_data.push_back({v0, {10, 10, 0}, 3});
+    sphere_data.push_back({v0, {-10, 10, 10}, 1});
+    sphere_data.push_back({v0, {0, 10, 10}, 2});
+    sphere_data.push_back({v0, {10, 10, 10}, 3});
+    // ADD INITIAL STATES AND FRICTION AND WEIGHT
 
 
-      // add spheres
-      //    for (auto const& sd : sphere_data)
+    // add spheres
+    for (auto const& sd : sphere_data)
       //      detail::add_sphere(*fixture, "Sx", std::get<0>(sd), std::get<1>(sd), std::get<2>(sd));
-      for (auto const& sd : sphere_data)
-        detail::add_sphere(*fixture, "Sx", std::get<0>(sd), std::get<1>(sd), std::get<2>(sd), 0.6);
+      detail::add_sphere(*fixture, "Sx", std::get<0>(sd), std::get<1>(sd), std::get<2>(sd), 0.5);
 
-      // Setup fixed planes
-      //    detail::add_fixed_plane(*fixture, "plane_ground", {0, 0, 0}, {0, 1, 0});
-      detail::add_fixed_plane(*fixture, "plane_ground", {0, 0, 0}, {0, 1, 0}, 0.6);
+    // Setup fixed planes
+    //    detail::add_fixed_plane(*fixture, "plane_ground", {0, 0, 0}, {0, 1, 0});
+    detail::add_fixed_plane(*fixture, "plane_ground", {0, 0, 0}, {0, 1, 0}, 0.5);
 
-      return fixture;
-    }
+    return fixture;
+  }
 
-    inline std::unique_ptr<scenario_fixtures::FixtureOsFpPsfp_sa> constructScenario011() {
-      // Construct scenario
-      auto fixture = std::make_unique<scenario_fixtures::FixtureOsFpPsfp_sa>();
+  inline std::unique_ptr<scenario_fixtures::FixtureOsFpPsfp_sa> constructScenario010() {
+    // Construct scenario
+    auto fixture = std::make_unique<scenario_fixtures::FixtureOsFpPsfp_sa>();
 
-      // Setup global system
-      //    fixture->forces().G = types::Vector3{0, -30, 0};
-      fixture->forces().G = types::Vector3{0, -9.833, 0};
+    // Setup global system
+    //    fixture->forces().G = types::Vector3{0, -9.833, 0};
+    fixture->forces().G = types::Vector3{0, -30.0, 0};
 
-      // Set up spheres
-      //    auto const p1 = types::Vector3{-10, 3, 0};
-      auto const p1 = types::Vector3{-10, 16, 0};
-      //    auto const p1 = types::Vector3{-10, 3.001, 0};
-      //    auto const p1 = types::Vector3{-75, 0.501, 0};
-      //    auto const v1 = types::Vector3{150, 0, 0};
-      auto const v1 = types::Vector3{200, 0, 0};
-
-      //    auto const p2 = types::Vector3{10, 3, 0};
-      auto const p2 = types::Vector3{10, 16, 0};
-      //    auto const p2 = types::Vector3{5, 3.001, 0};
-      auto const v2 = types::Vector3{-200, 0, 0};
-      //    auto const v2 = types::Vector3{0, 0, 0};
-
-      //    detail::add_sphere(*fixture, "S1", v1, p1, 3);
-      detail::add_sphere(*fixture, "S1", v1, p1, 3, 0.6);
-      detail::add_sphere(*fixture, "S2", v2, p2, 3, 0.6);
-      // ADD INITIAL STATES AND FRICTION AND WEIGHT
-
-      // Setup fixed planes
-      detail::add_fixed_plane(*fixture, "plane_dos", {-15, 15, 0}, {1, 0, 0}, 0.6);
-      detail::add_fixed_plane(*fixture, "plane_uno", {15, 15, 0}, {-1, 0, 0}, 0.6);
-      detail::add_fixed_plane(*fixture, "plane_tres", {0, 0, 0}, {0, 1, 0}, 0.6);
+    // Set up spheres
+    // -- velocity - translation - radius --
+    std::vector<std::tuple<types::Vector3, types::Vector3, types::ValueType>> sphere_data;
+    sphere_data.push_back({{1, 1, 0}, {-10, 3.001, -10}, 3});
+    //    sphere_data.push_back({{1, 0.1, 0}, {-10, 3.001, -10}, 3});
+    sphere_data.push_back({{1, 0, 0}, {-10, 3.001, 0}, 3});
+    //    sphere_data.push_back({{1, 0, 0}, {-10, 3.001, 0}, 3});
+    sphere_data.push_back({{1, -1, 0}, {-10, 3.001, 10}, 3});
+    //    sphere_data.push_back({{1, -0.1, 0}, {-10, 3.001, 10}, 3});
+    // ADD INITIAL STATES AND FRICTION AND WEIGHT
 
 
+    // add spheres
+    //    for (auto const& sd : sphere_data)
+    //      detail::add_sphere(*fixture, "Sx", std::get<0>(sd), std::get<1>(sd), std::get<2>(sd));
+    for (auto const& sd : sphere_data)
+      detail::add_sphere(*fixture, "Sx", std::get<0>(sd), std::get<1>(sd), std::get<2>(sd), 0.6);
 
-      return fixture;
-    }
+    // Setup fixed planes
+    //    detail::add_fixed_plane(*fixture, "plane_ground", {0, 0, 0}, {0, 1, 0});
+    detail::add_fixed_plane(*fixture, "plane_ground", {0, 0, 0}, {0, 1, 0}, 0.6);
 
-    inline std::unique_ptr<scenario_fixtures::FixtureOsFp> constructScenario012() {
-      // Construct scenario
-      auto fixture = std::make_unique<scenario_fixtures::FixtureOsFp>();
+    return fixture;
+  }
 
-      // Setup global system
-      fixture->forces().G = types::Vector3{0, -9.833, 0};
+  inline std::unique_ptr<scenario_fixtures::FixtureOsFpPsfp_sa> constructScenario011() {
+    // Construct scenario
+    auto fixture = std::make_unique<scenario_fixtures::FixtureOsFpPsfp_sa>();
 
-      // Set up spheres
-      auto const p = types::Vector3{-10, 5, -10};
+    // Setup global system
+    //    fixture->forces().G = types::Vector3{0, -30, 0};
+    fixture->forces().G = types::Vector3{0, -9.833, 0};
 
-      // Randomize zelection of normal
-      auto const v_min = types::Vector3{-10, 5, -20};
-      auto const v_max = types::Vector3{20, 10, 10};
+    // Set up spheres
+    //    auto const p1 = types::Vector3{-10, 3, 0};
+    auto const p1 = types::Vector3{-10, 16, 0};
+    //    auto const p1 = types::Vector3{-10, 3.001, 0};
+    //    auto const p1 = types::Vector3{-75, 0.501, 0};
+    //    auto const v1 = types::Vector3{150, 0, 0};
+    auto const v1 = types::Vector3{200, 0, 0};
 
-      std::random_device                               r;
-      std::default_random_engine                       g(r());
-      std::uniform_real_distribution<types::ValueType> x_dist(v_min[0], v_max[0]);
-      std::uniform_real_distribution<types::ValueType> y_dist(v_min[1], v_max[1]);
-      std::uniform_real_distribution<types::ValueType> z_dist(v_min[2], v_max[2]);
+    //    auto const p2 = types::Vector3{10, 3, 0};
+    auto const p2 = types::Vector3{10, 16, 0};
+    //    auto const p2 = types::Vector3{5, 3.001, 0};
+    auto const v2 = types::Vector3{-200, 0, 0};
+    //    auto const v2 = types::Vector3{0, 0, 0};
 
-      std::vector<std::tuple<types::Vector3, types::Vector3>> sphere_data;
-      sphere_data.reserve(3 * 3 * 3);
-      for (auto x = 0; x < 3; ++x) {
-        for (auto y = 0; y < 3; ++y) {
-          for (auto z = 0; z < 3; ++z) {
+    //    detail::add_sphere(*fixture, "S1", v1, p1, 3);
+    detail::add_sphere(*fixture, "S1", v1, p1, 3, 0.6);
+    detail::add_sphere(*fixture, "S2", v2, p2, 3, 0.6);
+    // ADD INITIAL STATES AND FRICTION AND WEIGHT
 
-            auto const v = types::Vector3{x_dist(g), y_dist(g), z_dist(g)};
-            sphere_data.emplace_back(v, p + types::Vector3{10. * x, 10. * y, 10. * z});
-          }
+    // Setup fixed planes
+    detail::add_fixed_plane(*fixture, "plane_dos", {-15, 15, 0}, {1, 0, 0}, 0.6);
+    detail::add_fixed_plane(*fixture, "plane_uno", {15, 15, 0}, {-1, 0, 0}, 0.6);
+    detail::add_fixed_plane(*fixture, "plane_tres", {0, 0, 0}, {0, 1, 0}, 0.6);
+
+
+
+    return fixture;
+  }
+
+  inline std::unique_ptr<scenario_fixtures::FixtureOsFp> constructScenario012() {
+    // Construct scenario
+    auto fixture = std::make_unique<scenario_fixtures::FixtureOsFp>();
+
+    // Setup global system
+    fixture->forces().G = types::Vector3{0, -9.833, 0};
+
+    // Set up spheres
+    auto const p = types::Vector3{-10, 5, -10};
+
+    // Randomize zelection of normal
+    auto const v_min = types::Vector3{-10, 5, -20};
+    auto const v_max = types::Vector3{20, 10, 10};
+
+    std::random_device                               r;
+    std::default_random_engine                       g(r());
+    std::uniform_real_distribution<types::ValueType> x_dist(v_min[0], v_max[0]);
+    std::uniform_real_distribution<types::ValueType> y_dist(v_min[1], v_max[1]);
+    std::uniform_real_distribution<types::ValueType> z_dist(v_min[2], v_max[2]);
+
+    std::vector<std::tuple<types::Vector3, types::Vector3>> sphere_data;
+    sphere_data.reserve(3 * 3 * 3);
+    for (auto x = 0; x < 3; ++x) {
+      for (auto y = 0; y < 3; ++y) {
+        for (auto z = 0; z < 3; ++z) {
+
+          auto const v = types::Vector3{x_dist(g), y_dist(g), z_dist(g)};
+          sphere_data.emplace_back(v, p + types::Vector3{10. * x, 10. * y, 10. * z});
         }
       }
-
-      for (auto const& sd : sphere_data)
-        detail::add_sphere(*fixture, "Sx", std::get<0>(sd), std::get<1>(sd), 1);
-
-      // Setup fixed planes
-      detail::add_fixed_plane(*fixture, "plane_ground", {0, 0, 0}, {0, 1, 0});
-      detail::add_fixed_plane(*fixture, "plane_top", {0, 30, 0}, {0, -1, 0});
-
-      detail::add_fixed_plane(*fixture, "plane_back", {0, 15, -30}, {0, 0, 1});
-      detail::add_fixed_plane(*fixture, "plane_front", {0, 15, 30}, {0, 0, -1});
-
-      detail::add_fixed_plane(*fixture, "plane_left", {-30, 15, 0}, {1, 0, 0});
-      detail::add_fixed_plane(*fixture, "plane_right", {30, 15, 0}, {-1, 0, 0});
-
-      return fixture;
     }
 
-    inline std::unique_ptr<scenario_fixtures::FixtureOsFpPsfp_sa> constructScenario013() {
-      // Construct scenario
-      auto fixture = std::make_unique<scenario_fixtures::FixtureOsFpPsfp_sa>();
+    for (auto const& sd : sphere_data)
+      detail::add_sphere(*fixture, "Sx", std::get<0>(sd), std::get<1>(sd), 1);
 
-      // Setup global system
-      fixture->forces().G = types::Vector3{0, -9.833, 0};
+    // Setup fixed planes
+    detail::add_fixed_plane(*fixture, "plane_ground", {0, 0, 0}, {0, 1, 0});
+    detail::add_fixed_plane(*fixture, "plane_top", {0, 30, 0}, {0, -1, 0});
 
-      // Set up spheres
-      // -- velocity - translation - radius --
-      auto const                                                                v0 = types::Vector3{0, 0, 0};
-      std::vector<std::tuple<types::Vector3, types::Vector3, types::ValueType>> sphere_data;
-      sphere_data.push_back({v0, {-10, 15, -10}, 1});
-      sphere_data.push_back({v0, {0, 15, -10}, 2});
-      sphere_data.push_back({v0, {10, 15, -10}, 3});
-      sphere_data.push_back({v0, {-10, 15, 0}, 1});
-      sphere_data.push_back({v0, {0, 15, 0}, 2});
-      sphere_data.push_back({v0, {10, 15, 0}, 3});
-      sphere_data.push_back({v0, {-10, 15, 10}, 1});
-      sphere_data.push_back({v0, {0, 15, 10}, 2});
-      sphere_data.push_back({v0, {10, 15, 10}, 3});
-      // ADD INITIAL STATES AND FRICTION AND WEIGHT
+    detail::add_fixed_plane(*fixture, "plane_back", {0, 15, -30}, {0, 0, 1});
+    detail::add_fixed_plane(*fixture, "plane_front", {0, 15, 30}, {0, 0, -1});
+
+    detail::add_fixed_plane(*fixture, "plane_left", {-30, 15, 0}, {1, 0, 0});
+    detail::add_fixed_plane(*fixture, "plane_right", {30, 15, 0}, {-1, 0, 0});
+
+    return fixture;
+  }
+
+  inline std::unique_ptr<scenario_fixtures::FixtureOsFpPsfp_sa> constructScenario013() {
+    // Construct scenario
+    auto fixture = std::make_unique<scenario_fixtures::FixtureOsFpPsfp_sa>();
+
+    // Setup global system
+    fixture->forces().G = types::Vector3{0, -9.833, 0};
+
+    // Set up spheres
+    // -- velocity - translation - radius --
+    auto const                                                                v0 = types::Vector3{0, 0, 0};
+    std::vector<std::tuple<types::Vector3, types::Vector3, types::ValueType>> sphere_data;
+    sphere_data.push_back({v0, {-10, 15, -10}, 1});
+    sphere_data.push_back({v0, {0, 15, -10}, 2});
+    sphere_data.push_back({v0, {10, 15, -10}, 3});
+    sphere_data.push_back({v0, {-10, 15, 0}, 1});
+    sphere_data.push_back({v0, {0, 15, 0}, 2});
+    sphere_data.push_back({v0, {10, 15, 0}, 3});
+    sphere_data.push_back({v0, {-10, 15, 10}, 1});
+    sphere_data.push_back({v0, {0, 15, 10}, 2});
+    sphere_data.push_back({v0, {10, 15, 10}, 3});
+    // ADD INITIAL STATES AND FRICTION AND WEIGHT
 
 
-      // add spheres
-      for (auto const& sd : sphere_data)
-        detail::add_sphere(*fixture, "Sx", std::get<0>(sd), std::get<1>(sd), std::get<2>(sd), 0.5);
+    // add spheres
+    for (auto const& sd : sphere_data)
+      detail::add_sphere(*fixture, "Sx", std::get<0>(sd), std::get<1>(sd), std::get<2>(sd), 0.5);
 
-      // Setup fixed planes
-      detail::add_fixed_plane(*fixture, "plane_ground", {0, 0, 0}, {1, 1, 0}, 0.5);
+    // Setup fixed planes
+    detail::add_fixed_plane(*fixture, "plane_ground", {0, 0, 0}, {1, 1, 0}, 0.5);
 
-      return fixture;
+    return fixture;
+  }
+
+  inline std::unique_ptr<scenario_fixtures::FixtureOsFpPsfp_sa> constructScenario014() {
+    // Construct scenario
+    auto fixture = std::make_unique<scenario_fixtures::FixtureOsFpPsfp_sa>();
+
+    // Setup global system
+    fixture->forces().G = types::Vector3{0, -9.833, 0};
+
+    // Set up spheres
+    // -- velocity - translation - radius --
+    auto const                                                                v0 = types::Vector3{0, 0, 0};
+    std::vector<std::tuple<types::Vector3, types::Vector3, types::ValueType>> sphere_data;
+    sphere_data.push_back({v0, {-10, 30, 10}, 1});
+    sphere_data.push_back({v0, {-10, 30, 0}, 2});
+    sphere_data.push_back({v0, {-10, 30, -10}, 3});
+    // ADD INITIAL STATES AND FRICTION AND WEIGHT
+
+
+    // add spheres
+    for (auto const& sd : sphere_data)
+      detail::add_sphere(*fixture, "Sx", std::get<0>(sd), std::get<1>(sd), std::get<2>(sd), 0.5);
+
+    // Setup fixed planes
+    detail::add_fixed_plane(*fixture, "plane_inclined", {0, 12, 0}, {1, 1, 0}, 0.5);
+
+    detail::add_fixed_plane(*fixture, "plane_ground", {15, 0, 0}, {0, 1, 0}, 0.5);
+
+    return fixture;
+  }
+
+  inline std::unique_ptr<scenario_fixtures::FixtureOsFpPsfp_sa> constructScenario015() {
+    // Construct scenario
+    auto fixture = std::make_unique<scenario_fixtures::FixtureOsFpPsfp_sa>();
+
+    // Setup global system
+    fixture->forces().G = types::Vector3{0, -9.833, 0};
+
+    // Set up spheres
+    // -- velocity - translation - radius --
+    auto const                                                                v0 = types::Vector3{10, 0, 0};
+    std::vector<std::tuple<types::Vector3, types::Vector3, types::ValueType>> sphere_data;
+    sphere_data.push_back({v0, {0, 1, 10}, 1});
+    sphere_data.push_back({v0, {0, 2, 0}, 2});
+    sphere_data.push_back({v0, {0, 3, -10}, 3});
+
+    // Ground plane the sphere initially slides on
+    auto* gp = detail::add_fixed_plane(*fixture, "plane_ground", {0, 0, 0}, {0, 1, 0});
+
+    // add spheres
+    for (auto const& sd : sphere_data) {
+      auto* sp = detail::add_sphere(*fixture, "Sx", std::get<0>(sd), std::get<1>(sd), std::get<2>(sd), 0,
+                                    rigidbodies::Sphere::States::Sliding);
+
+      // default attachment
+      fixture->sfpAttachments()[sp] = gp;
     }
 
-    inline std::unique_ptr<scenario_fixtures::FixtureOsFpPsfp_sa> constructScenario014() {
-      // Construct scenario
-      auto fixture = std::make_unique<scenario_fixtures::FixtureOsFpPsfp_sa>();
 
-      // Setup global system
-      fixture->forces().G = types::Vector3{0, -9.833, 0};
+    // Inclined plane to bounce on
+    detail::add_fixed_plane(*fixture, "bounce plane R", {20, 10, 0}, {-1, 1, 0});
 
-      // Set up spheres
-      // -- velocity - translation - radius --
-      auto const                                                                v0 = types::Vector3{0, 0, 0};
-      std::vector<std::tuple<types::Vector3, types::Vector3, types::ValueType>> sphere_data;
-      sphere_data.push_back({v0, {-10, 30, 10}, 1});
-      sphere_data.push_back({v0, {-10, 30, 0}, 2});
-      sphere_data.push_back({v0, {-10, 30, -10}, 3});
-      // ADD INITIAL STATES AND FRICTION AND WEIGHT
+    // Inclined plane to bounce on
+    detail::add_fixed_plane(*fixture, "bounce plane L", {-20, 10, 0}, {1, 1, 0});
 
 
-      // add spheres
-      for (auto const& sd : sphere_data)
-        detail::add_sphere(*fixture, "Sx", std::get<0>(sd), std::get<1>(sd), std::get<2>(sd), 0.5);
+    return fixture;
+  }
 
-      // Setup fixed planes
-      detail::add_fixed_plane(*fixture, "plane_inclined", {0, 12, 0}, {1, 1, 0}, 0.5);
+  inline std::unique_ptr<scenario_fixtures::FixtureOsFpPsfp_sa> constructScenario016() {
+    // Construct scenario
+    auto fixture = std::make_unique<scenario_fixtures::FixtureOsFpPsfp_sa>();
 
-      detail::add_fixed_plane(*fixture, "plane_ground", {15, 0, 0}, {0, 1, 0}, 0.5);
+    // Setup global system
+    fixture->forces().G = types::Vector3{0, -9.833, 0};
 
-      return fixture;
+    // Set up spheres
+    // -- velocity - translation - radius --
+    auto const                                                                v0 = types::Vector3{10, 0, 0};
+    std::vector<std::tuple<types::Vector3, types::Vector3, types::ValueType>> sphere_data;
+    sphere_data.push_back({v0, {0, 1, 10}, 1});
+    sphere_data.push_back({v0, {0, 2, 0}, 2});
+    sphere_data.push_back({v0, {0, 3, -10}, 3});
+
+    // Ground plane the sphere initially slides on
+    auto* gp = detail::add_fixed_plane(*fixture, "plane_ground", {0, 0, 0}, {0, 1, 0}, 0.1);
+
+    // add spheres
+    for (auto const& sd : sphere_data) {
+      auto* sp = detail::add_sphere(*fixture, "Sx", std::get<0>(sd), std::get<1>(sd), std::get<2>(sd), 0.1,
+                                    rigidbodies::Sphere::States::Sliding);
+
+      // default attachment
+      fixture->sfpAttachments()[sp] = gp;
     }
 
-    inline std::unique_ptr<scenario_fixtures::FixtureOsFpPsfp_sa> constructScenario015() {
-      // Construct scenario
-      auto fixture = std::make_unique<scenario_fixtures::FixtureOsFpPsfp_sa>();
 
-      // Setup global system
-      fixture->forces().G = types::Vector3{0, -9.833, 0};
+    // Inclined plane to bounce on
+    detail::add_fixed_plane(*fixture, "bounce plane R", {20, 10, 0}, {-1, 1, 0}, 0.2);
 
-      // Set up spheres
-      // -- velocity - translation - radius --
-      auto const                                                                v0 = types::Vector3{10, 0, 0};
-      std::vector<std::tuple<types::Vector3, types::Vector3, types::ValueType>> sphere_data;
-      sphere_data.push_back({v0, {0, 1, 10}, 1});
-      sphere_data.push_back({v0, {0, 2, 0}, 2});
-      sphere_data.push_back({v0, {0, 3, -10}, 3});
-
-      // Ground plane the sphere initially slides on
-      auto* gp = detail::add_fixed_plane(*fixture, "plane_ground", {0, 0, 0}, {0, 1, 0});
-
-      // add spheres
-      for (auto const& sd : sphere_data) {
-        auto* sp = detail::add_sphere(*fixture, "Sx", std::get<0>(sd), std::get<1>(sd), std::get<2>(sd), 0,
-                                      rigidbodies::Sphere::States::Sliding);
-
-        // default attachment
-        fixture->sfpAttachments()[sp] = gp;
-      }
+    // Inclined plane to bounce on
+    detail::add_fixed_plane(*fixture, "bounce plane L", {-20, 10, 0}, {1, 1, 0}, 0.5);
 
 
-      // Inclined plane to bounce on
-      detail::add_fixed_plane(*fixture, "bounce plane R", {20, 10, 0}, {-1, 1, 0});
+    return fixture;
+  }
 
-      // Inclined plane to bounce on
-      detail::add_fixed_plane(*fixture, "bounce plane L", {-20, 10, 0}, {1, 1, 0});
+  inline std::unique_ptr<scenario_fixtures::FixtureOsFpPsfp_sa> constructScenario017() {
+    // Construct scenario
+    auto fixture = std::make_unique<scenario_fixtures::FixtureOsFpPsfp_sa>();
 
+    // Setup global system
+    fixture->forces().G = types::Vector3{0, -9.833, 0};
 
-      return fixture;
+    // Set up spheres
+    // -- velocity - translation - radius --
+    auto const                                                                v0 = types::Vector3{10, 0, 0};
+    std::vector<std::tuple<types::Vector3, types::Vector3, types::ValueType>> sphere_data;
+    sphere_data.push_back({v0, {0, 1, 10}, 1});
+    sphere_data.push_back({v0, {0, 2, 0}, 2});
+    sphere_data.push_back({v0, {0, 3, -10}, 3});
+
+    // Ground plane the sphere initially slides on
+    auto* gp = detail::add_fixed_plane(*fixture, "plane_ground", {0, 0, 0}, {0, 1, 0});
+
+    // add spheres
+    for (auto const& sd : sphere_data) {
+      auto* sp = detail::add_sphere(*fixture, "Sx", std::get<0>(sd), std::get<1>(sd), std::get<2>(sd), 0,
+                                    rigidbodies::Sphere::States::Sliding);
+
+      // default attachment
+      fixture->sfpAttachments()[sp] = gp;
     }
 
-    inline std::unique_ptr<scenario_fixtures::FixtureOsFpPsfp_sa> constructScenario016() {
-      // Construct scenario
-      auto fixture = std::make_unique<scenario_fixtures::FixtureOsFpPsfp_sa>();
 
-      // Setup global system
-      fixture->forces().G = types::Vector3{0, -9.833, 0};
-
-      // Set up spheres
-      // -- velocity - translation - radius --
-      auto const                                                                v0 = types::Vector3{10, 0, 0};
-      std::vector<std::tuple<types::Vector3, types::Vector3, types::ValueType>> sphere_data;
-      sphere_data.push_back({v0, {0, 1, 10}, 1});
-      sphere_data.push_back({v0, {0, 2, 0}, 2});
-      sphere_data.push_back({v0, {0, 3, -10}, 3});
-
-      // Ground plane the sphere initially slides on
-      auto* gp = detail::add_fixed_plane(*fixture, "plane_ground", {0, 0, 0}, {0, 1, 0}, 0.1);
-
-      // add spheres
-      for (auto const& sd : sphere_data) {
-        auto* sp = detail::add_sphere(*fixture, "Sx", std::get<0>(sd), std::get<1>(sd), std::get<2>(sd), 0.1,
-                                      rigidbodies::Sphere::States::Sliding);
-
-        // default attachment
-        fixture->sfpAttachments()[sp] = gp;
-      }
+    // Inclined plane to bounce on
+    detail::add_fixed_plane(*fixture, "bounce plane R", {20, 10, 0}, {-1, -1, 0});
 
 
-      // Inclined plane to bounce on
-      detail::add_fixed_plane(*fixture, "bounce plane R", {20, 10, 0}, {-1, 1, 0}, 0.2);
+    return fixture;
+  }
 
-      // Inclined plane to bounce on
-      detail::add_fixed_plane(*fixture, "bounce plane L", {-20, 10, 0}, {1, 1, 0}, 0.5);
+  inline std::unique_ptr<scenario_fixtures::FixtureOsFpPsfp_sa> constructScenario018() {
+    // Construct scenario
+    auto fixture = std::make_unique<scenario_fixtures::FixtureOsFpPsfp_sa>();
 
+    // Setup global system
+    fixture->forces().G = types::Vector3{9.833, 0, 0};
 
-      return fixture;
+    // Set up spheres
+    // -- velocity - translation - radius --
+    auto const                                                                v0 = types::Vector3{30, 0, 0};
+    std::vector<std::tuple<types::Vector3, types::Vector3, types::ValueType>> sphere_data;
+    sphere_data.push_back({v0, {0, 1, 10}, 1});
+    sphere_data.push_back({v0, {0, 2, 0}, 2});
+    sphere_data.push_back({v0, {0, 3, -10}, 3});
+
+    // Ground plane the sphere initially slides on
+    auto* gp = detail::add_fixed_plane(*fixture, "plane_ground", {0, 0, 0}, {0, 1, 0});
+
+    // add spheres
+    for (auto const& sd : sphere_data) {
+      auto* sp = detail::add_sphere(*fixture, "Sx", std::get<0>(sd), std::get<1>(sd), std::get<2>(sd), 0,
+                                    rigidbodies::Sphere::States::Sliding);
+
+      // default attachment
+      fixture->sfpAttachments()[sp] = gp;
     }
 
-    inline std::unique_ptr<scenario_fixtures::FixtureOsFpPsfp_sa> constructScenario017() {
-      // Construct scenario
-      auto fixture = std::make_unique<scenario_fixtures::FixtureOsFpPsfp_sa>();
 
-      // Setup global system
-      fixture->forces().G = types::Vector3{0, -9.833, 0};
+    // Inclined plane to bounce on
+    detail::add_fixed_plane(*fixture, "bounce plane R", {20, 10, 0}, {-1, 1, 0});
 
-      // Set up spheres
-      // -- velocity - translation - radius --
-      auto const                                                                v0 = types::Vector3{10, 0, 0};
-      std::vector<std::tuple<types::Vector3, types::Vector3, types::ValueType>> sphere_data;
-      sphere_data.push_back({v0, {0, 1, 10}, 1});
-      sphere_data.push_back({v0, {0, 2, 0}, 2});
-      sphere_data.push_back({v0, {0, 3, -10}, 3});
-
-      // Ground plane the sphere initially slides on
-      auto* gp = detail::add_fixed_plane(*fixture, "plane_ground", {0, 0, 0}, {0, 1, 0});
-
-      // add spheres
-      for (auto const& sd : sphere_data) {
-        auto* sp = detail::add_sphere(*fixture, "Sx", std::get<0>(sd), std::get<1>(sd), std::get<2>(sd), 0,
-                                      rigidbodies::Sphere::States::Sliding);
-
-        // default attachment
-        fixture->sfpAttachments()[sp] = gp;
-      }
+    // Inclined plane to bounce on
+    detail::add_fixed_plane(*fixture, "bounce plane R2", {20, 20, 0}, {-1, -1, 0});
 
 
-      // Inclined plane to bounce on
-      detail::add_fixed_plane(*fixture, "bounce plane R", {20, 10, 0}, {-1, -1, 0});
+    return fixture;
+  }
 
+  inline std::unique_ptr<scenario_fixtures::FixtureOsFpPsfp_sa> constructScenario019() {
+    // Construct scenario
+    auto fixture = std::make_unique<scenario_fixtures::FixtureOsFpPsfp_sa>();
 
-      return fixture;
-    }
+    // Setup global system
+    fixture->forces().G = types::Vector3{0, -9.833, 0};
 
-    inline std::unique_ptr<scenario_fixtures::FixtureOsFpPsfp_sa> constructScenario018() {
-      // Construct scenario
-      auto fixture = std::make_unique<scenario_fixtures::FixtureOsFpPsfp_sa>();
+    // Set up spheres
+    auto const p = types::Vector3{-10, 5, -10};
 
-      // Setup global system
-      fixture->forces().G = types::Vector3{9.833, 0, 0};
+    // Randomize zelection of normal
+    auto const v_min = types::Vector3{-10, 5, -20};
+    auto const v_max = types::Vector3{20, 10, 10};
 
-      // Set up spheres
-      // -- velocity - translation - radius --
-      auto const                                                                v0 = types::Vector3{30, 0, 0};
-      std::vector<std::tuple<types::Vector3, types::Vector3, types::ValueType>> sphere_data;
-      sphere_data.push_back({v0, {0, 1, 10}, 1});
-      sphere_data.push_back({v0, {0, 2, 0}, 2});
-      sphere_data.push_back({v0, {0, 3, -10}, 3});
+    std::random_device                               r;
+    std::default_random_engine                       g(r());
+    std::uniform_real_distribution<types::ValueType> x_dist(v_min[0], v_max[0]);
+    std::uniform_real_distribution<types::ValueType> y_dist(v_min[1], v_max[1]);
+    std::uniform_real_distribution<types::ValueType> z_dist(v_min[2], v_max[2]);
 
-      // Ground plane the sphere initially slides on
-      auto* gp = detail::add_fixed_plane(*fixture, "plane_ground", {0, 0, 0}, {0, 1, 0});
+    std::vector<std::tuple<types::Vector3, types::Vector3>> sphere_data;
+    sphere_data.reserve(3 * 3 * 3);
+    for (auto x = 0; x < 3; ++x) {
+      for (auto y = 0; y < 3; ++y) {
+        for (auto z = 0; z < 3; ++z) {
 
-      // add spheres
-      for (auto const& sd : sphere_data) {
-        auto* sp = detail::add_sphere(*fixture, "Sx", std::get<0>(sd), std::get<1>(sd), std::get<2>(sd), 0,
-                                      rigidbodies::Sphere::States::Sliding);
-
-        // default attachment
-        fixture->sfpAttachments()[sp] = gp;
-      }
-
-
-      // Inclined plane to bounce on
-      detail::add_fixed_plane(*fixture, "bounce plane R", {20, 10, 0}, {-1, 1, 0});
-
-      // Inclined plane to bounce on
-      detail::add_fixed_plane(*fixture, "bounce plane R2", {20, 20, 0}, {-1, -1, 0});
-
-
-      return fixture;
-    }
-
-    inline std::unique_ptr<scenario_fixtures::FixtureOsFpPsfp_sa> constructScenario019() {
-      // Construct scenario
-      auto fixture = std::make_unique<scenario_fixtures::FixtureOsFpPsfp_sa>();
-
-      // Setup global system
-      fixture->forces().G = types::Vector3{0, -9.833, 0};
-
-      // Set up spheres
-      auto const p = types::Vector3{-10, 5, -10};
-
-      // Randomize zelection of normal
-      auto const v_min = types::Vector3{-10, 5, -20};
-      auto const v_max = types::Vector3{20, 10, 10};
-
-      std::random_device                               r;
-      std::default_random_engine                       g(r());
-      std::uniform_real_distribution<types::ValueType> x_dist(v_min[0], v_max[0]);
-      std::uniform_real_distribution<types::ValueType> y_dist(v_min[1], v_max[1]);
-      std::uniform_real_distribution<types::ValueType> z_dist(v_min[2], v_max[2]);
-
-      std::vector<std::tuple<types::Vector3, types::Vector3>> sphere_data;
-      sphere_data.reserve(3 * 3 * 3);
-      for (auto x = 0; x < 3; ++x) {
-        for (auto y = 0; y < 3; ++y) {
-          for (auto z = 0; z < 3; ++z) {
-
-            auto const v = types::Vector3{x_dist(g), y_dist(g), z_dist(g)};
-            sphere_data.emplace_back(v, p + types::Vector3{10. * x, 10. * y, 10. * z});
-          }
+          auto const v = types::Vector3{x_dist(g), y_dist(g), z_dist(g)};
+          sphere_data.emplace_back(v, p + types::Vector3{10. * x, 10. * y, 10. * z});
         }
       }
-
-      for (auto const& sd : sphere_data)
-        detail::add_sphere(*fixture, "Sx", std::get<0>(sd), std::get<1>(sd), 2, 0.1);
-
-      // Setup fixed planes
-      detail::add_fixed_plane(*fixture, "plane_ground", {0, 0, 0}, {0, 1, 0}, 0.5);
-      detail::add_fixed_plane(*fixture, "plane_top", {0, 30, 0}, {0, -1, 0}, 0.5);
-
-      detail::add_fixed_plane(*fixture, "plane_back", {0, 15, -30}, {0, 0, 1}, 0.5);
-      detail::add_fixed_plane(*fixture, "plane_front", {0, 15, 30}, {0, 0, -1}, 0.5);
-
-      detail::add_fixed_plane(*fixture, "plane_left", {-30, 15, 0}, {1, 0, 0}, 0.5);
-      detail::add_fixed_plane(*fixture, "plane_right", {30, 15, 0}, {-1, 0, 0}, 0.5);
-
-      return fixture;
     }
 
-    */
+    for (auto const& sd : sphere_data)
+      detail::add_sphere(*fixture, "Sx", std::get<0>(sd), std::get<1>(sd), 2, 0.1);
+
+    // Setup fixed planes
+    detail::add_fixed_plane(*fixture, "plane_ground", {0, 0, 0}, {0, 1, 0}, 0.5);
+    detail::add_fixed_plane(*fixture, "plane_top", {0, 30, 0}, {0, -1, 0}, 0.5);
+
+    detail::add_fixed_plane(*fixture, "plane_back", {0, 15, -30}, {0, 0, 1}, 0.5);
+    detail::add_fixed_plane(*fixture, "plane_front", {0, 15, 30}, {0, 0, -1}, 0.5);
+
+    detail::add_fixed_plane(*fixture, "plane_left", {-30, 15, 0}, {1, 0, 0}, 0.5);
+    detail::add_fixed_plane(*fixture, "plane_right", {30, 15, 0}, {-1, 0, 0}, 0.5);
+
+    return fixture;
+  }
+
+  */
 
   /* --------------------------------------------------------------------------------- */
   /* ------------------------------- PROJECT SCENARIOS ------------------------------- */
@@ -956,6 +955,62 @@ namespace dte3607::coldet::utils::scenario_factories {
 
   //  return fixture;
   //  }
+
+  /*------------------------------SPECIFIC FUNCTIONALITY---------------------------*/
+  inline std::unique_ptr<scenario_fixtures::Fixture_Os_Fs_ip_lp_cPsfp_sa_ds>
+  constructScenarioDiscretization() {
+    // Construct scenario
+    auto fixture = std::make_unique<scenario_fixtures::Fixture_Os_Fs_ip_lp_cPsfp_sa_ds>();
+
+    // Setup global system
+    fixture->forces().G = types::Vector3{0, 0, 0};
+
+    // Set up spheres
+    auto const p1 = types::Vector3{-10, 25, -10};
+    auto const v1 = types::Vector3{10, 0, 0};
+
+    auto const p2 = types::Vector3{-10, 15, 0};
+    auto const v2 = types::Vector3{100, 0, 0};
+
+    auto const p3 = types::Vector3{-10, 5, 10};
+    auto const v3 = types::Vector3{10000, 0, 0};
+
+    detail::add_sphere(*fixture, "functionality", v1, p1, 1);
+    detail::add_sphere(*fixture, "functionality", v2, p2, 1);
+    detail::add_sphere(*fixture, "functionality", v3, p3, 1);
+
+    // Setup fixed planes
+    detail::add_fixed_plane(*fixture, "plane_1", {-15, 15, 0}, {1, 0, 0});
+    detail::add_fixed_plane(*fixture, "plane_2", {15, 15, 0}, {-1, 0, 0});
+
+    return fixture;
+  }
+
+  inline std::unique_ptr<scenario_fixtures::Fixture_Os_Fs_ip_lp_cPsfp_sa_ds> constructScenarioStates() {
+    auto fixture = std::make_unique<scenario_fixtures::Fixture_Os_Fs_ip_lp_cPsfp_sa_ds>();
+
+    fixture->forces().G = types::Vector3{0, -9.81, 0};
+
+    detail::add_sphere(*fixture, "functionality", {200, 0, 0}, {-30, 1.003, 0}, 1, 0.5, States::Free, 15);
+    detail::add_sphere(*fixture, "functionality", {0, 0, 0}, {20, 2.503, 0}, 2.5, 0.5, States::Free, 15);
+
+    detail::add_fixed_plane(*fixture, "Floor", {0, 0, 0}, {0, 1, 0}, 0.5);
+
+    return fixture;
+  }
+
+  inline std::unique_ptr<scenario_fixtures::Fixture_Os_Fs_ip_lp_cPsfp_sa_ds> constructScenarioRotation() {
+    auto fixture = std::make_unique<scenario_fixtures::Fixture_Os_Fs_ip_lp_cPsfp_sa_ds>();
+
+    fixture->forces().G = types::Vector3{0, -9.81, 0};
+
+    detail::add_sphere(*fixture, "functionality", {50, 0, 50}, {-10, 15, -10}, 2.5, 0.5, States::Free, 30);
+    detail::add_sphere(*fixture, "functionality", {-50, 0, -50}, {7, 15, 10}, 2.5, 0.5, States::Free, 30);
+
+    detail::add_fixed_plane(*fixture, "Floor", {0, 0, 0}, {0, 1, 0}, 0.5);
+
+    return fixture;
+  }
 
   /* --------------------GALTON-------------------- */
   /* --------------------NO TOUCHING IN FUNNEL-------------------- */

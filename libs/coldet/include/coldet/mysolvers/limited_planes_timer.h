@@ -27,10 +27,6 @@
 #include <algorithm>
 #include <utility>
 
-// DEBUG
-#include <sstream>
-//#include <ctime>
-
 namespace dte3607::coldet::mysolvers::limited_planes_timer {
   using namespace std::chrono;
 
@@ -97,6 +93,7 @@ namespace dte3607::coldet::mysolvers::limited_planes_timer {
                                int const s_index) {
 
     for (int i = 0; i < s_index; i++) {
+      // Don't care about spheres that have landed on floor
       if (O_S[i]->state() != States::Resting) {
         for (int k = 0; k < s_index; k++) {
           if (O_S[k]->state() != States::Resting) {
@@ -113,6 +110,7 @@ namespace dte3607::coldet::mysolvers::limited_planes_timer {
         }
 
         for (auto& fs : F_S) {
+          // Don't check if sphere is still in funnel
           if (O_S[i]->point()[1] < pyr_top + O_S[i]->radius()) {
             auto const collision
               = mechanics::detectCollisionSphereFixedSphere(O_S[i].get(), fs.get(), trajectories);
@@ -443,7 +441,6 @@ namespace dte3607::coldet::mysolvers::limited_planes_timer {
     // Response for infinite planes turned off since the "baskets" on floor is not implemented
     c.s->setVelocity({0, 0, 0});
     c.s->setState(States::Resting);
-    std::cout << "x: " << c.s->point()[0] << " z: " << c.s->point()[2] << std::endl;
     attachmentsOsFp[c.s] = c.p;
     cache(c.s, c.tp);
     //----------------------------------------------------------------------------------------
@@ -486,7 +483,7 @@ namespace dte3607::coldet::mysolvers::limited_planes_timer {
 
   void sortAndMakeUnique(CollisionsOsFp& C_OsFp, CollisionsOss& C_Oss, CollisionsOsFs& C_OsFs,
                          CollisionsOsFlp& C_OsFlp) {
-    // Sort in descending order
+    // Descending order
     std::sort(C_OsFp.begin(), C_OsFp.end(),
               [](CollisionOsFp c1, CollisionOsFp c2) -> bool { return c1.tp > c2.tp; });
     std::sort(C_Oss.begin(), C_Oss.end(),
@@ -541,12 +538,6 @@ namespace dte3607::coldet::mysolvers::limited_planes_timer {
   template <typename SolverDevFixture_T>
   requires concepts::scenario_fixtures::SolverFixtureGaltonLimitedPlane<SolverDevFixture_T> void
   solve(SolverDevFixture_T& scenario, NS timestep) {
-
-    /*//DEBUG RENDER TIME
-     auto now1 = std::chrono::system_clock::now();
-     auto timeDuration1 = now1.time_since_epoch();
-     auto t1 =
-     std::chrono::duration_cast<std::chrono::NS>(timeDuration1);*/
 
     TP const         t_0             = Clock::now();
     OsFpAttachments& attachmentsOsFp = scenario.attachmentsOsFp();
@@ -643,14 +634,6 @@ namespace dte3607::coldet::mysolvers::limited_planes_timer {
         }
       }
     }
-
-    /*//DEBUG RENDER TIME
-    auto now2 = std::chrono::system_clock::now();
-    auto timeDuration2 = now2.time_since_epoch();
-    auto t2 =
-    std::chrono::duration_cast<std::chrono::NS>(timeDuration2);
-    if(((t2.count() - t1.count()) / 1000000) > 10.)
-        std::cout << (t2.count() - t1.count()) / 1000000 << std::endl;*/
   }
 }   // namespace dte3607::coldet::mysolvers::limited_planes_timer
 

@@ -33,10 +33,6 @@
 #include <stdio.h>
 #include <locale.h>
 
-// DEBUG
-//#include <sstream>
-//#include <ctime>
-
 namespace dte3607::coldet::mysolvers::limited_planes_timer_data {
   using namespace std::chrono;
 

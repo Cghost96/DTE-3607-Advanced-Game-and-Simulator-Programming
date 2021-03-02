@@ -129,7 +129,7 @@ namespace app {
       dte3607::coldet::solver_dev::step2::solve(scenario, time_step);
     };
 
-    registerScenario("Scenario 003 - AlgStep 2", ctr_fn, slv_fn);
+    registerScenario("Test", ctr_fn, slv_fn);
   }
 
   void GuiApplication::registerScenario004AlgStep1() {
@@ -391,6 +391,36 @@ namespace app {
 
   //    registerScenario(/*Scenario name*/, ctr_fn, slv_fn);
   //  }
+
+  /*------------------------------SPECIFIC FUNCTIONALITY-------------------------*/
+  void GuiApplication::registerScenarioDiscretization() {
+    auto ctr_fn
+      = []() { return dte3607::coldet::utils::scenario_factories::constructScenarioDiscretization(); };
+    auto slv_fn = [](auto& scenario, auto const& time_step) {
+      dte3607::coldet::mysolvers::limited_planes::solve(scenario, time_step);
+    };
+
+    registerScenario("Time discretization (run as debug)", ctr_fn, slv_fn);
+  }
+
+  void GuiApplication::registerScenarioStates() {
+    auto ctr_fn = []() { return dte3607::coldet::utils::scenario_factories::constructScenarioStates(); };
+    auto slv_fn = [](auto& scenario, auto const& time_step) {
+      dte3607::coldet::mysolvers::limited_planes::solve(scenario, time_step);
+    };
+
+    registerScenario("States (run as debug)", ctr_fn, slv_fn);
+  }
+
+  void GuiApplication::registerScenarioRotation() {
+    auto ctr_fn = []() { return dte3607::coldet::utils::scenario_factories::constructScenarioRotation(); };
+    auto slv_fn = [](auto& scenario, auto const& time_step) {
+      dte3607::coldet::mysolvers::limited_planes::solve(scenario, time_step);
+    };
+
+    registerScenario("Rotation (run as debug)", ctr_fn, slv_fn);
+  }
+
 
   /* --------------------GALTON-------------------- */
   /* --------------------NO TOUCHING ALLOWED IN FUNNEL-------------------- */

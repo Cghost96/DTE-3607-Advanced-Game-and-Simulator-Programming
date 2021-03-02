@@ -29,50 +29,55 @@ int main(int argc, char* argv[]) {
     guiapp.registerScenario002AlgStep1();
 
     guiapp.registerScenario003AlgStep1();
-    guiapp.registerScenario003AlgStep2();
+  guiapp.registerScenario003AlgStep2();
 
-    guiapp.registerScenario004AlgStep1();
-    guiapp.registerScenario004AlgStep2();
-    guiapp.registerScenario004AlgStep3a();
+  guiapp.registerScenario004AlgStep1();
+  guiapp.registerScenario004AlgStep2();
+  guiapp.registerScenario004AlgStep3a();
 
-    guiapp.registerScenario005AlgStep3a();
+  guiapp.registerScenario005AlgStep3a();
 
-    guiapp.registerScenario006AlgStep3a();
+  guiapp.registerScenario006AlgStep3a();
 
-    guiapp.registerScenario007AlgStep3a();
+  guiapp.registerScenario007AlgStep3a();
 
-    guiapp.registerScenario008AlgStep3a();
+  guiapp.registerScenario008AlgStep3a();
 
-    guiapp.registerScenario009AlgStep3b();
+  guiapp.registerScenario009AlgStep3b();
 
-    guiapp.registerScenario010AlgStep3b();
+  guiapp.registerScenario010AlgStep3b();
 
-    guiapp.registerScenario011AlgStep3b();
+  guiapp.registerScenario011AlgStep3b();
 
-    guiapp.registerScenario012AlgStep3a();
+  guiapp.registerScenario012AlgStep3a();
 
-    guiapp.registerScenario013AlgStep3b();
-    guiapp.registerScenario014AlgStep3b();
-    guiapp.registerScenario015AlgStep3b();
-    guiapp.registerScenario016AlgStep3b();
-    guiapp.registerScenario017AlgStep3b();
-    guiapp.registerScenario018AlgStep3b();
-    guiapp.registerScenario019AlgStep3b();
+  guiapp.registerScenario013AlgStep3b();
+  guiapp.registerScenario014AlgStep3b();
+  guiapp.registerScenario015AlgStep3b();
+  guiapp.registerScenario016AlgStep3b();
+  guiapp.registerScenario017AlgStep3b();
+  guiapp.registerScenario018AlgStep3b();
+  guiapp.registerScenario019AlgStep3b();
 
-    // Register original test scenarios
-    guiapp.registerOriginalStep0TestScenario();
-    guiapp.registerOriginalStep1TestScenario();
-    guiapp.registerOriginalStep2TestScenario();
-    guiapp.registerOriginalStep3aTestScenario();
+  // Register original test scenarios
+  guiapp.registerOriginalStep0TestScenario();
+  guiapp.registerOriginalStep1TestScenario();
+  guiapp.registerOriginalStep2TestScenario();
+  guiapp.registerOriginalStep3aTestScenario();
 
-   Register component testing scenarios
-    guiapp.registerComponentTestingScenario01();
-    guiapp.registerComponentTestingScenario02();
-    guiapp.registerComponentTestingScenario03();*/
+ Register component testing scenarios
+  guiapp.registerComponentTestingScenario01();
+  guiapp.registerComponentTestingScenario02();
+  guiapp.registerComponentTestingScenario03();*/
 
   /* --------------------------------------------------------------------------------- */
   /* ------------------------------- PROJECT SCENARIOS ------------------------------- */
   /* --------------------------------------------------------------------------------- */
+
+  /*----------------SPECIFIC FUNCTIONALITY------------------*/
+  guiapp.registerScenarioDiscretization();
+  guiapp.registerScenarioStates();
+  guiapp.registerScenarioRotation();
 
   /* --------------------GALTON-------------------- */
   /* --------------------NO TOUCHING ALLOWED IN FUNNEL-------------------- */

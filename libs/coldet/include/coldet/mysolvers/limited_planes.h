@@ -26,10 +26,6 @@
 #include <set>
 #include <algorithm>
 
-// DEBUG
-#include <sstream>
-//#include <ctime>
-
 namespace dte3607::coldet::mysolvers::limited_planes {
 
   using namespace std::chrono;
@@ -97,9 +93,10 @@ namespace dte3607::coldet::mysolvers::limited_planes {
                                VT const& pyr_top) {
 
     for (auto& s : O_S) {
-      if (s->state() != States::Resting) {
+      // Don't care about spheres that have landed on floor (except for showing specific functionality)
+      if (s->state() != States::Resting || s->m_name == "functionality") {
         for (auto& s2 : O_S) {
-          if (s2->state() != States::Resting) {
+          if (s2->state() != States::Resting || s->m_name == "functionality") {
             if (s.get() == s2.get()) continue;
             auto const collision = mechanics::detectCollisionSphereSphere(s.get(), s2.get(), trajectories);
             if (collision) {
@@ -112,6 +109,7 @@ namespace dte3607::coldet::mysolvers::limited_planes {
         }
 
         for (auto& fs : F_S) {
+          // Don't check if still in funnel
           if (s->point()[1] < pyr_top + s->radius()) {
             auto const collision
               = mechanics::detectCollisionSphereFixedSphere(s.get(), fs.get(), trajectories);
@@ -438,17 +436,25 @@ namespace dte3607::coldet::mysolvers::limited_planes {
     simulate(c.s, attachmentsOsFp, trajectories, dt, timestep, t_0);
 
     // Response for infinite planes turned off since the "baskets" on floor is not implemented
-    c.s->setVelocity({0, 0, 0});
-    c.s->setState(States::Resting);
-    std::cout << "x: " << c.s->point()[0] << " z: " << c.s->point()[2] << std::endl;
-    attachmentsOsFp[c.s] = c.p;
-    cache(c.s, c.tp);
+    // Response is implemented for the specific functionality scenarios
+    if (c.s->m_name != "functionality") {
+      c.s->setVelocity({0, 0, 0});
+      c.s->setState(States::Resting);
+      attachmentsOsFp[c.s] = c.p;
+      cache(c.s, c.tp);
+    }
+    else {
+      response(c, attachmentsOsFp, trajectories, force, timestep, t_0);
+      cache(c.s, c.tp);
+      searchForNewCollisions(c, O_S, F_S, F_P, F_LP, trajectories, C_OsFp, C_OsFs, C_Oss, C_OsFlp, t_0,
+                             timestep);
+    }
     //----------------------------------------------------------------------------------------
 
     //    response(c, attachmentsOsFp, trajectories, force, timestep, t_0);
     //    cache(c.s, c.tp);
     //    searchForNewCollisions(c, O_S, F_S, F_P, F_LP, trajectories, C_OsFp, C_OsFs, C_Oss, C_OsFlp, t_0,
-    //                           timestep, s_index);
+    //                           timestep);
   }
 
   void handleCollision(CollisionsOsFs& C_OsFs, CollisionsOss& C_Oss, CollisionsOsFp& C_OsFp,
@@ -481,7 +487,7 @@ namespace dte3607::coldet::mysolvers::limited_planes {
 
   void sortAndMakeUnique(CollisionsOsFp& C_OsFp, CollisionsOss& C_Oss, CollisionsOsFs& C_OsFs,
                          CollisionsOsFlp& C_OsFlp) {
-    // Sort in descending order
+    // Descending order
     std::sort(C_OsFp.begin(), C_OsFp.end(),
               [](CollisionOsFp c1, CollisionOsFp c2) -> bool { return c1.tp > c2.tp; });
     std::sort(C_Oss.begin(), C_Oss.end(),
@@ -536,12 +542,6 @@ namespace dte3607::coldet::mysolvers::limited_planes {
   template <typename SolverDevFixture_T>
   requires concepts::scenario_fixtures::SolverFixtureGaltonLimitedPlane<SolverDevFixture_T> void
   solve(SolverDevFixture_T& scenario, NS timestep) {
-
-    /*//DEBUG RENDER TIME
-     auto now1 = std::chrono::system_clock::now();
-     auto timeDuration1 = now1.time_since_epoch();
-     auto t1 =
-     std::chrono::duration_cast<std::chrono::NS>(timeDuration1);*/
 
     TP const         t_0             = Clock::now();
     OsFpAttachments& attachmentsOsFp = scenario.attachmentsOsFp();
@@ -630,14 +630,6 @@ namespace dte3607::coldet::mysolvers::limited_planes {
         }
       }
     }
-
-    /*//DEBUG RENDER TIME
-    auto now2 = std::chrono::system_clock::now();
-    auto timeDuration2 = now2.time_since_epoch();
-    auto t2 =
-    std::chrono::duration_cast<std::chrono::NS>(timeDuration2);
-    if(((t2.count() - t1.count()) / 1000000) > 10.)
-        std::cout << (t2.count() - t1.count()) / 1000000 << std::endl;*/
   }
 }   // namespace dte3607::coldet::mysolvers::limited_planes
 

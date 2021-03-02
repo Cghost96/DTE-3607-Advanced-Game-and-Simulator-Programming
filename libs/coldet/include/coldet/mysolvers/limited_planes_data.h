@@ -32,10 +32,6 @@
 #include <stdio.h>
 #include <locale.h>
 
-// DEBUG
-//#include <sstream>
-//#include <ctime>
-
 namespace dte3607::coldet::mysolvers::limited_planes_data {
 
   using fixture = std::unique_ptr<scenario_fixtures::Fixture_Os_Fs_ip_lp_cPsfp_sa_ds_counter_distribution>;
