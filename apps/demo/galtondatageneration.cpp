@@ -2,7 +2,9 @@
 //#include <coldet/bits/types.h>
 //#include <coldet/mysolvers/limited_planes_timer_data.h>
 //#include <coldet/mysolvers/limited_planes_data.h>
+//#include <coldet/mysolvers/limited_planes_performance.h>
 //#include <coldet/utils/scenario_factories.h>
+//#include <coldet/utils/Instrumentor.h>
 
 //#include <iostream>
 //#include <stdio.h>
@@ -20,6 +22,7 @@
 // namespace factory       = dte3607::coldet::utils::scenario_factories;
 // namespace lp_data       = dte3607::coldet::mysolvers::limited_planes_data;
 // namespace lp_timer_data = dte3607::coldet::mysolvers::limited_planes_timer_data;
+// namespace performance   = dte3607::coldet::mysolvers::limited_planes_performance;
 
 // using data_fixture_t
 //  = dte3607::coldet::scenario_fixtures::Fixture_Os_Fs_ip_lp_cPsfp_sa_ds_t_counter_distribution;
@@ -58,17 +61,17 @@
 //  auto const timestep = NS(16ms);
 
 //  std::cout << "Starting construction..." << std::endl;
-//  /*NO TOUCHING*/
+/*NO TOUCHING*/
 //  std::unique_ptr<data_fixture> scenario01 = factory::constructGaltonData01();
 //  std::unique_ptr<data_fixture> scenario02 = factory::constructGaltonData02();
 //  std::unique_ptr<data_fixture> scenario03 = factory::constructGaltonData03();
 //  std::unique_ptr<data_fixture> scenario04 = factory::constructGaltonData04();
 
-//  /*TOUCHING*/
+/*TOUCHING*/
 //  std::unique_ptr<data_fixture> scenario05 = factory::constructGaltonData05();
 //  std::unique_ptr<data_fixture> scenario06 = factory::constructGaltonData06();
 
-//  /*TOUCHING AND TIMER*/
+/*TOUCHING AND TIMER*/
 //  std::unique_ptr<data_fixture_t> scenario07 = factory::constructGaltonData07();
 //  std::unique_ptr<data_fixture_t> scenario08 = factory::constructGaltonData08();
 //  std::unique_ptr<data_fixture_t> scenario09 = factory::constructGaltonData09();
@@ -162,9 +165,19 @@
 
 
 //  std::cout << std::endl << "----- 3000 spheres!!!!! щ（ﾟДﾟщ) <- CPU ------" << std::endl << std::endl;
-//  while (not lp_timer_data::solve(scenario12, timestep))
-//    ;
-//  printxDistribution(scenario12->xdistribution());
-//  printzDistribution(scenario12->zdistribution());
-//  std::cout << std::endl << "-----IT WORKED!!! BUT AT WHAT COST?  (×_×) <- CPU----" << std::endl;
+//                while (not lp_timer_data::solve(scenario12, timestep))
+//                  ;
+//                printxDistribution(scenario12->xdistribution());
+//                printzDistribution(scenario12->zdistribution());
+//                std::cout << std::endl << "-----IT WORKED!!! BUT AT WHAT COST?  (×_×) <- CPU----" << s
+//             td::endl;
+//  /*-------------------PERFORMANCE-------------------------*/
+//  std::cout << "starting" << std::endl;
+//  Instrumentor::Get().BeginSession("Scenario04");
+//  {
+//    while (not performance::solve(scenario04, timestep))
+//      ;
+//  }
+//  Instrumentor::Get().EndSession();
+//  std::cout << "finished" << std::endl;
 //}

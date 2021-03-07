@@ -4,6 +4,7 @@
 #include <blaze/Math.h>
 #include "../bits/types.h"
 #include "../bits/rigidbodies.h"
+#include "../utils/Instrumentor.h"
 
 namespace dte3607::coldet::utils::state {
 
@@ -111,84 +112,71 @@ namespace dte3607::coldet::utils::state {
   }   // namespace Rolling
 
   inline void detectStateChange(Sphere* s, FixedPlane* p, OsFpAttachments& attachmentsOsFp, V3& ds) {
+    InstrumentationTimer timer("State change");
+
     auto const v = s->velocity();
     auto const n = p->normal();
     switch (s->state()) {
       case States::Free: {
-        bool const slidingState = Free::canGoToSlidingState(p->normal(), ds, v, getRotationAxis(s));
-        bool const rollingState = Free::canGoToRollingState(p->normal(), ds, v, getRotationAxis(s));
-        bool const restingState = Free::canGoToRestingState(p->normal(), ds);
+        bool const slidingState = Free::canGoToSlidingState(n, ds, v, getRotationAxis(s));
+        bool const rollingState = Free::canGoToRollingState(n, ds, v, getRotationAxis(s));
+        bool const restingState = Free::canGoToRestingState(n, ds);
         if (restingState) {
           s->setState(States::Resting);
-          //          std::cout << s->m_name << " set to Resting" << std::endl;
-          //          std::cout << "x: " << s->point()[0] << " z: " << s->point()[2] << std::endl;
           attachmentsOsFp[s] = p;
         }
         else if (rollingState) {
           s->setState(States::Rolling);
-          //          std::cout << s->m_name << " set to Rolling" << std::endl;
           attachmentsOsFp[s] = p;
         }
         else if (slidingState) {
           s->setState(States::Sliding);
-          //          std::cout << s->m_name << " set to Sliding" << std::endl;
           attachmentsOsFp[s] = p;
         }
       } break;
       case States::Resting: {
-        bool const freeState    = Resting::canGoToFreeState(p->normal(), ds);
-        bool const slidingState = Resting::canGoToSlidingState(p->normal(), ds);
-        bool const rollingState = Resting::canGoToRollingState(p->normal(), ds, v, getRotationAxis(s));
+        bool const freeState    = Resting::canGoToFreeState(n, ds);
+        bool const slidingState = Resting::canGoToSlidingState(n, ds);
+        bool const rollingState = Resting::canGoToRollingState(n, ds, v, getRotationAxis(s));
         if (freeState) {
           s->setState(States::Free);
-          //          std::cout << s->m_name << " set to Free" << std::endl;
           attachmentsOsFp.erase(s);
         }
         else if (rollingState) {
           s->setState(States::Rolling);
-          //          std::cout << s->m_name << " set to Rolling" << std::endl;
         }
         else if (slidingState) {
           s->setState(States::Sliding);
-          //          std::cout << s->m_name << " set to Sliding" << std::endl;
         }
       } break;
       case States::Sliding: {
-        bool const freeState    = Sliding::canGoToFreeState(p->normal(), ds);
+        bool const freeState    = Sliding::canGoToFreeState(n, ds);
         bool const rollingState = Sliding::canGoToRollingState(v, getRotationAxis(s));
-        bool const restingState = Sliding::canGoToRestingState(p->normal(), ds);
+        bool const restingState = Sliding::canGoToRestingState(n, ds);
         if (freeState) {
           s->setState(States::Free);
-          //          std::cout << s->m_name << " set to Free" << std::endl;
           attachmentsOsFp.erase(s);
         }
         else if (rollingState) {
           s->setState(States::Rolling);
-          //          std::cout << s->m_name << " set to Rolling" << std::endl;
         }
         else if (restingState) {
           s->setState(States::Resting);
-          //          std::cout << s->m_name << " set to Resting" << std::endl;
-          //          std::cout << "x: " << s->point()[0] << " z: " << s->point()[2] << std::endl;
         }
       } break;
       case States::Rolling: {
-        bool freeState    = Rolling::canGoToFreeState(p->normal(), ds);
+        bool freeState    = Rolling::canGoToFreeState(n, ds);
         bool slidingState = Rolling::canGoToSlidingState(v, getRotationAxis(s));
-        bool restingState = Rolling::canGoToRestingState(p->normal(), ds);
+        bool restingState = Rolling::canGoToRestingState(n, ds);
         if (freeState) {
           s->setState(States::Free);
-          //          std::cout << s->m_name << " set to Free" << std::endl;
           attachmentsOsFp.erase(s);
         }
         else if (slidingState) {
           s->setState(States::Sliding);
-          //          std::cout << s->m_name << " set to Sliding" << std::endl;
         }
         else if (restingState) {
           s->setState(States::Resting);
-          //          std::cout << s->m_name << " set to Resting" << std::endl;
-          //          std::cout << "x: " << s->point()[0] << " z: " << s->point()[2] << std::endl;
         }
       } break;
     }

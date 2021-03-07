@@ -517,5 +517,4 @@ namespace app {
 
     registerScenario("G - 200 s w touch and timer", ctr_fn, slv_fn);
   }
-
 }   // namespace app
